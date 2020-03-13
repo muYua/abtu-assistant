@@ -9,7 +9,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +17,8 @@ import lombok.ToString;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
-@DynamicInsert
-@DynamicUpdate
+@DynamicInsert//实现default赋值
+//@DynamicUpdate//BUG,2020.3.10
 @Getter
 @Setter
 @ToString
@@ -29,7 +28,7 @@ public class Role {
   @Column
   private Long id;
   
-  @Column(length = 16, nullable = false)
+  @Column(nullable = false)
   private String password;
   
   //昵称
@@ -70,4 +69,5 @@ public class Role {
   //注册激活标志位
   @Column(columnDefinition = "tinyint(1) not null default '0'")
   private Boolean activated;
+  
 }

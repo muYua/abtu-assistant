@@ -34,7 +34,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
 
     /* 登录 */
     function login() {
-        let flag = 0;//默认是电子邮箱
+        let flag = "email";//默认是电子邮箱
 
         let idNumber = ID_NUMBER_DOM.val().trim()
             , password = PASSWORD_DOM.val().trim();
@@ -50,11 +50,13 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
             PASSWORD_DOM.focus();
             return false;
         }
-
-        function ajax_login(idNumber, password, flag) {
-            $.ajax('./login', {
+        
+        function loginAjax(idNumber, password, flag) {
+        	console.log(encrypt.encryptWithHashing(password, "MD5"));
+        	$.ajax({
+            	url: utils.getDomainName() + '/login',
                 data: {
-                    idNumber: idNumber,
+                    roleNumber: idNumber,
                     password: encrypt.encryptWithHashing(password, "MD5"),
                     flag: flag
                 },
@@ -80,7 +82,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
                         if(obj.type === 2)
                             window.location.href = 'student.html';
                     } else {
-                        if(!utils.isEmpty(data.msg)) //账号激活判断
+                        if(!utils.isEmpty(data.msg))
                             layerAnim6(data.msg);
                         else
                             layerAnim6('用户名或密码错误！');
@@ -97,12 +99,12 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
         //判断登录账号类型
         if (utils.isEmail(idNumber)) {
             //电子邮件
-            flag = 0;
-            ajax_login(idNumber, password, flag);
+            flag = "email";
+            loginAjax(idNumber, password, flag);
         } else if (utils.isPhoneNumber(idNumber)) {
             //电话号码
-            flag = 1;
-            ajax_login(idNumber, password, flag);
+            flag = "phone";
+            loginAjax(idNumber, password, flag);
         } else {
             layerAnim6('请填写正确的电子邮箱或手机号码!');
             ID_NUMBER_DOM.val("");
@@ -126,7 +128,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
     });
 
     //Token令牌自登录
-    $(function () {
+/*    $(function () {
         let token = localStorage.getItem("token");
         console.log("【token】"+token);
         if (!utils.isEmpty(token)) {
@@ -167,7 +169,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
                 }
             }); //end ajax
         }
-    });
+    });*/
     /* end 登录 */
 
     //注册

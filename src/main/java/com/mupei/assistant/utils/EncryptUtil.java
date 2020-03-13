@@ -17,7 +17,7 @@ import lombok.Getter;
 
 @Component
 public class EncryptUtil {
-	
+
 	@Value("${encryptUtil.tempSalt}")
 	private String tempSalt;
 	@Getter
@@ -25,7 +25,7 @@ public class EncryptUtil {
 	private String viToken; // AES的初始向量，可以通过手动更改VI控制Token的有效性
 	@Getter
 	@Value("${encryptUtil.viReg}")
-	private String viReg; //注册激活链接VI
+	private String viReg; // 注册激活链接VI
 
 	/**
 	 * 散列算法加密
@@ -71,6 +71,32 @@ public class EncryptUtil {
 
 	}
 
+	/**
+	 * 散列算法加密
+	 * 
+	 * @param message   明文
+	 * @param algorithm 散列加密算法类型：MD2、MD5、SHA(SHA-1)、SHA-1、SHA-224、SHA-256、SHA-384、SHA-512等（不区分大小写）
+	 * @param salt      密码盐值，防止使用彩虹表对密码进行爆破
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws UnsupportedEncodingException
+	 */
+	public String encryptWithSHA(String message, String algorithm, String salt)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		String messageWithSalt = message + salt;
+
+		// 生成实现指定摘要算法的MessageDigest对象
+		MessageDigest md = MessageDigest.getInstance(algorithm);
+
+		// 使用指定的字节数组对摘要进行最后更新，然后完成摘要计算
+		byte[] digest = md.digest(messageWithSalt.getBytes("UTF-8"));
+
+		// 返回Base64字符串
+		return Base64.getEncoder().encodeToString(digest);
+	}
+
+//	---------------------------------------------------------------------
+
 	// 获取AES密钥(单例)--16位十六进制字符串
 	private static String keyOfAES = null; // 静态变量赋初值只在函数第一次调用时起作用
 
@@ -103,7 +129,7 @@ public class EncryptUtil {
 	 * @param key     密钥
 	 * @return String:Base64编码字符串形式的密文
 	 */
-	public String encryptWithAES(String message, String key , String vi) {
+	public String encryptWithAES(String message, String key, String vi) {
 		final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
 		if (key == null || "".equals(key)) {
@@ -142,10 +168,10 @@ public class EncryptUtil {
 	public String decryptWithAES(String message, String key, String vi) {
 		final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
-		if(message == null || "".equals(message)) {
+		if (message == null || "".equals(message)) {
 			return null;
 		}
-		
+
 		if (key == null || "".equals(key)) {
 			return null;
 		}

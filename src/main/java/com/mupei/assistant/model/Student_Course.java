@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +15,10 @@ import lombok.ToString;
 @Entity
 @Table
 @DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @ToString
-public class Student_course {
+public class Student_Course {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column
@@ -37,6 +35,10 @@ public class Student_course {
   private String date;
   
   //考勤记录
-  @Column(nullable = false)
+  @Column
   private String content;
+  
+  //平时成绩
+  @Column(length = 3)
+  private String usualPerformance;
 }

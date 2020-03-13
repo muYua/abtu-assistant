@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,6 @@ import lombok.ToString;
 @Entity
 @Table
 @DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @ToString
@@ -34,7 +32,8 @@ public class Course {
   @Column(length = 30, nullable = false)
   private String courseName;
   
-  @Column
+  //主讲教师
+  @Column(nullable = false)
   private Long teacherId;
     
 }

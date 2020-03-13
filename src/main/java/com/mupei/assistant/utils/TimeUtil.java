@@ -16,4 +16,10 @@ public class TimeUtil {
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		return simpleDateFormat.format(new Date());
 	}
+	
+	public String getTimeWithFormat(String dataFormat) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+		return simpleDateFormat.format(new Date());
+	}
 }

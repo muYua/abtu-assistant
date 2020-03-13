@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,6 @@ import lombok.ToString;
 @Entity
 @Table
 @DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @ToString
@@ -30,6 +28,7 @@ public class Student extends Role {
   @Column(length = 12)
   private String stuNumber;
   
+  //所属学校
   @Column(length = 55)
   private String school;
   

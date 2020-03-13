@@ -105,11 +105,17 @@ file:
   #文件上传目录（注意Linux和Windows上的目录结构不同）
   #file.uploadFolder=/root/uploadFiles/
   uploadFolder: d://uploadFiles/
+##---------------------------------------------------  
 encryptUtil:
   tempSalt: abcdefghijklmnopqrstuvwxyz
   viToken: ABCDEF1221FEDCBA
   viReg: AADDEF8956FEDCFA
+  password:
+    algorithm: SHA-256
+    salt: abcdedlMt
+  verifycode:
+    algorithm: SHA-256
 sendLinkUtil:
-  website: 127.0.0.1:8080
+  website: http://127.0.0.1:8080
 timeUtil:
   dataFormat: yyyy-MM-dd HH:mm:ss

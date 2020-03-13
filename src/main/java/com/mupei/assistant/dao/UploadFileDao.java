@@ -1,5 +1,9 @@
 package com.mupei.assistant.dao;
 
-public interface UploadFileDao {
+import org.springframework.data.repository.CrudRepository;
+
+import com.mupei.assistant.model.UploadFile;
+
+public interface UploadFileDao extends CrudRepository<UploadFile,Long>{
 
 }

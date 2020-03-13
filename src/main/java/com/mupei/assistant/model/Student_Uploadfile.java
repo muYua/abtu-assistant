@@ -7,29 +7,39 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table
 @DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Student_Uploadfile {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column
-  private Long id;
-  
-  @Column(nullable = false)
-  private Long stuId;
-  
-  @Column(nullable = false)
-  private Long fileId;
-  
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
+	private Long id;
+
+	@Column(nullable = false)
+	private Long stuId;
+
+	@Column(nullable = false)
+	private Long fileId;
+	
+	//创建日期
+	@Column(length = 10, nullable = false)
+	private String createDate;
+
+	public Student_Uploadfile(Long stuId, Long fileId, String createDate) {
+		this.stuId = stuId;
+		this.fileId = fileId;
+		this.createDate = createDate;
+	}
+
 }
