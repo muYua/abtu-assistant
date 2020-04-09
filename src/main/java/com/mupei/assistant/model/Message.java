@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
@@ -18,6 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Message {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +39,12 @@ public class Message {
   private String createTime;
   
   @Column
-  private Long teacherId;
+  private Long roleId;
+
+  public Message(String content, String sort, String createTime, Long roleId) {
+    this.content = content;
+    this.sort = sort;
+    this.createTime = createTime;
+    this.roleId = roleId;
+  }
 }

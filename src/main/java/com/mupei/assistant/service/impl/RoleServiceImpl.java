@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,22 +40,19 @@ public class RoleServiceImpl implements RoleService {
 	private String passwordAlgorithm;
 	@Value("${encryptUtil.password.salt}")
 	private String passwordSalt;
-	@Value("${encryptUtil.verifycode.algorithm}")
+	@Value("${encryptUtil.verifyCode.algorithm}")
 	private String verifyCodeAlgorithm;
 	
 	@Override
-	public Boolean loginCheck(String roleNumber, String password, String flag, String currentTime, String ipAddr) {
-		Role role = null;
+	public HashMap<String, Object> loginCheck(String roleNumber, String password, String flag, String currentTime, String ipAddr) {
+		Role role;
 		//密码再次加密（前端密码已进行加密password+salt）
-		String encrypted = "";
+		String encrypted;
 		try {
 			encrypted = encryptUtil.encryptWithSHA(password, passwordAlgorithm, passwordSalt);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return false;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return false;
+			return null;
 		}
 		if ("email".equals(flag)) {
 			role = roleDao.findByEmailAndPassword(roleNumber, encrypted);
@@ -62,11 +60,11 @@ public class RoleServiceImpl implements RoleService {
 			role = roleDao.findByPhoneAndPassword(roleNumber, encrypted);
 		} else {
 			log.error("【loginCheck】校验异常！");
-			return false;
+			return null;
 		}
 		if (null == role) {
 			log.error("【loginCheck】{}登录校验失败！", roleNumber);
-			return false;
+			return null;
 		}
 		//更新登录时间、登录IP
 		role.setLoginTime(currentTime);
@@ -74,7 +72,10 @@ public class RoleServiceImpl implements RoleService {
 		roleDao.save(role);
 		log.debug("【loginCheck】{}登录时间：{}", roleNumber, currentTime);
 		log.debug("【loginCheck】{}登录IP：{}", roleNumber, ipAddr);
-		return true;
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("roleId", role.getId());
+		map.put("roleSort", role.getSort());
+		return map;
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class RoleServiceImpl implements RoleService {
 		log.debug("emial{}--{}",role.getEmail(),role.getPassword());
 		//判重
 		Optional<Role> optional = roleDao.findByEmail(email);
-		Boolean stat = false;
+		boolean stat = false;
 		if (optional.isPresent()) {
 			Role tempRole = optional.get();
 			if (tempRole.getActivated()) {
@@ -95,13 +96,10 @@ public class RoleServiceImpl implements RoleService {
 			stat = true;
 		}
 		//密码再次加密（前端密码已进行加密password+salt）
-		String encrypted = "";
+		String encrypted;
 		try {
 			encrypted = encryptUtil.encryptWithSHA(role.getPassword(), passwordAlgorithm, passwordSalt);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		} catch (UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -120,10 +118,7 @@ public class RoleServiceImpl implements RoleService {
 		try {
 			sendLinkUtil.sendLink(role.getEmail());
 			log.debug("【reg】{}激活链接已发送。", email);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		} catch (UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -149,7 +144,7 @@ public class RoleServiceImpl implements RoleService {
 			return false;
 		}
 		//校验验证码
-		String checkVerifyCode = null;
+		String checkVerifyCode;
 		try {
 			checkVerifyCode = encryptUtil.encryptWithSHA(verifyCode, verifyCodeAlgorithm);
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
@@ -224,13 +219,10 @@ public class RoleServiceImpl implements RoleService {
 			if (!tempRole.getActivated())
 				return false;
 			//密码再次加密（前端密码已进行加密password+salt）
-			String encrypted = "";
+			String encrypted;
 			try {
 				encrypted = encryptUtil.encryptWithSHA(password, passwordAlgorithm, passwordSalt);
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				return false;
-			} catch (UnsupportedEncodingException e) {
+			} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 				return false;
 			}

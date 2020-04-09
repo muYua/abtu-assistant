@@ -30,7 +30,7 @@ public class CookieUtil {
 		if (maxAge > 0)
 			cookie.setMaxAge(maxAge);
 		response.addCookie(cookie);// 将Cookie返回给浏览器
-		return null;
+		return true;
 	}
 
 	/**
@@ -66,6 +66,6 @@ public class CookieUtil {
 				cookieMap.put(cookie.getName(), cookie);
 			}
 		}
-		return null;
+		return cookieMap;
 	}
 }

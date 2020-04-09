@@ -63,27 +63,22 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
                 dataType: 'json',//服务器返回json格式数据
                 type: 'post',//HTTP请求类型
                 timeout: 10000,//超时时间设置为10秒
-                success: function (data) {
-                    // console.log(data);
-                    let obj = data.obj;
-                    if (data.success) {
-                        //将token存入本地
-                        localStorage.setItem("token", encrypt.encryptWithAES(obj.token, obj.key, obj.vi));
-                        localStorage.setItem("type", encrypt.encryptWithAES(obj.type, obj.key, obj.vi));
-                        localStorage.setItem("id", encrypt.encryptWithAES(obj.id, obj.key, obj.vi));
-
-                        console.log(obj.type);
-                        console.log('===========^');
+                success: function (json) {
+            	    let message = json.msg;
+                    if (json.success) {
+                        let roleId = json.map['roleId'];
+                        let roleSort = json.map['roleSort'];
+                        sessionStorage.setItem("roleId", roleId);
                         //跳转主页
-                        if(obj.type === 0)
+                        if(roleSort === "a")
                             window.location.href = 'backstage/index.html';
-                        if(obj.type === 1)
+                        if(roleSort === "t")
                             window.location.href = 'teacher.html';
-                        if(obj.type === 2)
+                        if(roleSort === "s")
                             window.location.href = 'student.html';
                     } else {
-                        if(!utils.isEmpty(data.msg))
-                            layerAnim6(data.msg);
+                        if (typeof message !== undefined && !utils.isEmpty(message))
+                            layerAnim6(message);
                         else
                             layerAnim6('用户名或密码错误！');
                     }
@@ -126,7 +121,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
     $("#submit").on('click', function () {
         login();
     });
-
+    /*--------------END 登录--------------*/
     //Token令牌自登录
 /*    $(function () {
         let token = localStorage.getItem("token");
@@ -170,7 +165,6 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
             }); //end ajax
         }
     });*/
-    /* end 登录 */
 
     //注册
     $("#reg").on('click', function () {

@@ -20,7 +20,6 @@ public class JsonUtil {
 
 	// 将JSON字符串转换为对象
 	public <T> T parse(String json, Class<T> valueType) throws IOException {
-
 		return objectMapper.readValue(json, valueType);
 	}
 

@@ -40,11 +40,8 @@ public class Student extends Role {
   @Column(length = 20)
   private String major;
   
-  //班级
-  @Column(length = 28)
-  private String stuClass;
-  
   //入学年份
   @Column(length = 4)
   private String enrollmentYear;
+
 }

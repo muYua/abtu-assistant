@@ -16,6 +16,7 @@ public class Json {
 	//状态
 	private boolean success;
 	//数据
+	private Object obj;
 //	private ArrayList<?> obj; //集合可以存储不同类型的数据，前端得到数组
 	private Map<String, Object> map; //前端得到键值对集合
 	//Layui数据接口
@@ -27,7 +28,17 @@ public class Json {
 	public Json(boolean success) {
 		this.success = success;
 	}
-	
+
+	public Json(boolean success, ArrayList<?> data) {
+		this.success = success;
+		this.data = data;
+	}
+
+	public Json(boolean success, Map<String, Object> map) {
+		this.success = success;
+		this.map = map;
+	}
+
 	public Json(Integer code, ArrayList<?> data, Long count, String msg) {
 		this.code = code;
 		this.data = data;

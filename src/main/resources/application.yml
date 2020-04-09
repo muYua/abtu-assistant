@@ -1,6 +1,6 @@
-server:
-  servlet:
-    context-path: /assistant #根路径
+#server:
+#  servlet:
+#    context-path: /assistant #根路径
 
 spring:
   datasource: #数据库基本配置
@@ -20,7 +20,7 @@ spring:
     testOnBorrow: false
     testOnReturn: false
     poolPreparedStatements: true
-    filters: stat,wall,logback #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,slf4j #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
@@ -104,7 +104,7 @@ file:
   staticAccessPath: /static/** #静态资源对外暴露的访问路径
   #文件上传目录（注意Linux和Windows上的目录结构不同）
   #file.uploadFolder=/root/uploadFiles/
-  uploadFolder: d://uploadFiles/
+  uploadFolder: d://UploadFiles/
 ##---------------------------------------------------  
 encryptUtil:
   tempSalt: abcdefghijklmnopqrstuvwxyz
@@ -113,9 +113,9 @@ encryptUtil:
   password:
     algorithm: SHA-256
     salt: abcdedlMt
-  verifycode:
+  verifyCode:
     algorithm: SHA-256
-sendLinkUtil:
-  website: http://127.0.0.1:8080
 timeUtil:
   dataFormat: yyyy-MM-dd HH:mm:ss
+#主域名
+domainName: http://127.0.0.1:8080

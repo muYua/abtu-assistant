@@ -35,12 +35,12 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
             const NICKNAME_DOM = $("input[name='nickname']")
                 , EMAIL_DOM = $("input[name='email']")
                 , PASSWORD_DOM = $("input[name='password']")
-                , TYPE_DOM = $('input[type="radio"]:checked');
+                , SORT_DOM = $('input[type="radio"]:checked');
 
             let nickname = NICKNAME_DOM.val().trim()
                 , email = EMAIL_DOM.val().trim()
                 , password = PASSWORD_DOM.val().trim()
-                , type = TYPE_DOM.val()
+                , sort = SORT_DOM.val()
                 , encryptedPassword = encrypt.encryptWithHashing(password, "MD5")
 
             //昵称
@@ -75,9 +75,6 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
                 PASSWORD_DOM.focus();
                 return false;
             }
-
-            console.log(encryptedPassword);
-            console.log(utils.getDomainName());
             
             $.ajax({
             	url: utils.getDomainName() + '/reg', 
@@ -85,7 +82,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
                     nickname: nickname,
                     email: email,
                     password: encryptedPassword,
-                    sort: type,
+                    sort: sort,
                 },
                 dataType: 'json',//服务器返回json格式数据
                 type: 'post',//HTTP请求类型

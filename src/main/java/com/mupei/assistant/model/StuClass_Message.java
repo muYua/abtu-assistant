@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
@@ -19,25 +20,24 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-public class Student_Message {
+@NoArgsConstructor//无参构造函数，new时自动调用
+public class StuClass_Message {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Long id;
 
 	@Column(nullable = false)
-	private Long stuId;
-
+	private Long classId;
+	
 	@Column(nullable = false)
 	private Long messageId;
 
-	//创建日期
-	@Column(length = 10, nullable = false)
+	@Column(nullable = false, length = 19)
 	private String createDate;
 
-	public Student_Message(Long stuId, Long messageId, String createDate) {
-		this.stuId = stuId;
+	public StuClass_Message(Long classId, Long messageId, String createDate) {
+		this.classId = classId;
 		this.messageId = messageId;
 		this.createDate = createDate;
 	}

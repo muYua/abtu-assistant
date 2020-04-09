@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
@@ -18,22 +20,27 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Course {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column
-  private Long id;
-  
-  //课程编号
-  @Column(length = 30, nullable = false)
-  private String courseNumber;
-  
-  //课程名称
-  @Column(length = 30, nullable = false)
-  private String courseName;
-  
-  //主讲教师
-  @Column(nullable = false)
-  private Long teacherId;
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Long id;
+
+//    //课程编号
+//    @Column(length = 30, nullable = false)
+//    private String courseNumber;
+
+    //课程名称
+    @Column(length = 30, nullable = false)
+    private String courseName;
+
+    //主讲教师
+    @Column(nullable = false)
+    private Long teacherId;
+
+    public Course(String courseName, Long teacherId) {
+        this.courseName = courseName;
+        this.teacherId = teacherId;
+    }
 }

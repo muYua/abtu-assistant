@@ -21,26 +21,24 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor//无参构造函数，new时自动调用
-public class Course_Message {
+public class StuClass_UploadFile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Long id;
 
 	@Column(nullable = false)
-	private Long courseId;
-
-	@Column(nullable = false)
-	private Long messageId;
+	private Long classId;
 	
-	//创建日期
-	@Column(length = 10, nullable = false)
+	@Column(nullable = false)
+	private Long fileId;
+
+	@Column(nullable = false, length = 19)
 	private String createDate;
 
-	public Course_Message(Long courseId, Long messageId, String createDate) {
-		this.courseId = courseId;
-		this.messageId = messageId;
+	public StuClass_UploadFile(Long classId, Long fileId, String createDate) {
+		this.classId = classId;
+		this.fileId = fileId;
 		this.createDate = createDate;
 	}
-	
 }

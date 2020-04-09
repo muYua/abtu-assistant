@@ -17,7 +17,7 @@ public class SendLinkUtil {
 	private EncryptUtil encryptUtil;
 	@Autowired
 	private EmailUtil emailUtil;
-	@Value("${sendLinkUtil.website}")
+	@Value("${domainName}")
 	private String website;//主机网址
 
 	/* 替换URL中的特殊符号 */
@@ -34,7 +34,7 @@ public class SendLinkUtil {
 		String VI = encryptUtil.getViReg();
 		String encryptedEmail = encryptUtil.encryptWithAES(email, KEY, VI);
 		String encryptedVerifyCode = encryptUtil.encryptWithSHA(verifyCode, algorithm);
-		String url = website + "/assistant/activateRegVerifyCode?" + "&encryptedEmail=" + replaceUrl(encryptedEmail)
+		String url = website + "/activateRegVerifyCode?" + "&encryptedEmail=" + replaceUrl(encryptedEmail)
 				+ "&encryptedVerifyCode=" + replaceUrl(encryptedVerifyCode);
 		String message = "【阿师课堂助手】请点击该链接来进行账号激活：<a href='" + url + "' target='_blank'>" + url + "</a>"
 				+ "<p>注：该链接将在10分钟后失效。如果无法打开该链接，请复制到浏览器打开。</p>";

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <title>新建课程</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <style type="text/css">
+        .layui-form {
+            padding: 5px 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">课程ID</label>
+        <input type="text" class="layui-input layui-input-inline" name="courseId" autocomplete="off" placeholder="请输入课程ID">
+        <input type="button" class="layui-btn layui-inline"  name="courseIdButton" value="确定">
+    </div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>班级列表</legend>
+    </fieldset>
+    <table class="layui-hide" id="addCourse" lay-filter="addCourse"></table>
+    <script type="text/html" id="addCourseRowBar">
+        <a class="layui-btn layui-btn-xs" lay-event="choose">选择</a>
+    </script>
+</div>
+    <script type="text/javascript" data-main="js/student_addCourse" src="js/lib/require.js" charset="utf-8"></script>
+</body>
+</html>

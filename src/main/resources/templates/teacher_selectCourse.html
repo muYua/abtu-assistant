@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <title>查询课程信息</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+</head>
+<body>
+<div id="contentBody">
+    <table class="layui-hide" id="selectCourse" lay-filter="selectCourse"></table>
+    <script type="text/html" id="selectCourseRowBar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+</div>
+<script type="text/javascript" data-main="js/teacher_selectCourse" src="js/lib/require.js" charset="utf-8"></script>
+</body>
+</html>

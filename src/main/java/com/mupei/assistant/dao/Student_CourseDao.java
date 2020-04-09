@@ -8,6 +8,9 @@ import com.mupei.assistant.model.Student_Course;
 
 public interface Student_CourseDao extends CrudRepository<Student_Course, Long> {
 
-	ArrayList<Long> findByCourseIdAndDate(Long courseId, String date);
+	Student_Course findByCourseIdAndStuId(Long courseId, Long id);
 
+	ArrayList<Student_Course> findByCourseId(Long courseId);
+
+	ArrayList<Student_Course> findByStuId(Long stuId);
 }

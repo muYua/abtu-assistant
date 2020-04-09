@@ -2,17 +2,19 @@ package com.mupei.assistant.service;
 
 import com.mupei.assistant.model.Role;
 
+import java.util.HashMap;
+
 public interface RoleService {
-	Boolean loginCheck(String paramString1, String paramString2, String paramString3, String paramString4,
-			String paramString5);
 
-	Boolean reg(Role paramRole, String paramString1, String paramString2);
+	HashMap<String, Object> loginCheck(String roleNumber, String password, String flag, String currentTime, String ipAddr);
 
-	Boolean activateReg(String paramString1, String paramString2, String paramString3, String paramString4);
+	Boolean reg(Role role, String currentTime, String ipAddr);
 
-	Boolean getResetPasswordVerifyCode(String paramString1, String paramString2, String paramString3);
+	Boolean activateReg(String encryptedEmail, String encryptedVerifyCode, String currentTime, String ipAddr);
 
-	Boolean resetPassword(String paramString1, String paramString2, String paramString3, String paramString4);
+	Boolean getResetPasswordVerifyCode(String email, String currentTime, String ipAddr);
+
+	Boolean resetPassword(String email, String password, String currentTime, String ipAddr);
 
 	Boolean checkResetPasswordVerifyCode(String email, String verifyCode);
 }

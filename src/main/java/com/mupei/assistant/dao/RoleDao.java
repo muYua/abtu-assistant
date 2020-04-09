@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface RoleDao extends CrudRepository<Role, Long> {
 
-//	Boolean existsByEmail(String email);
-
 	Optional<Role> findByEmail(String email);
 
 	void deleteByEmail(String email);
