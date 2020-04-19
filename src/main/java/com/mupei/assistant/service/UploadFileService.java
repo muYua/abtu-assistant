@@ -16,4 +16,6 @@ public interface UploadFileService {
     ArrayList<UploadFile> getFilesByDate(Long courseId, Long classId, String date, String sort, Integer pageNo, Integer pageSize);
 
     ArrayList<Object> getHomeworkFilesByDate(Long courseId, Long classId, String date, String sort, Integer pageNo, Integer pageSize);
+
+    ArrayList<Object> getTeachingFilesByDate(Long courseId, Long classId, String date, String sort, Integer pageNo, Integer pageSize);
 }

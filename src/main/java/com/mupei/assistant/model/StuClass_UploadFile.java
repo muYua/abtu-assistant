@@ -1,12 +1,9 @@
 package com.mupei.assistant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
@@ -15,7 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table
+@Table(name = "stuclass_uploadfile")
 @DynamicInsert
 @Getter
 @Setter
@@ -27,18 +24,20 @@ public class StuClass_UploadFile {
 	@Column
 	private Long id;
 
-	@Column(nullable = false)
-	private Long classId;
-	
-	@Column(nullable = false)
-	private Long fileId;
+	@ManyToOne(targetEntity = StuClass.class)
+	@JoinColumn(name = "stuclass_id", referencedColumnName = "id", nullable = false)
+	private StuClass stuClass;
+
+	@ManyToOne(targetEntity = UploadFile.class)
+	@JoinColumn(name = "uploadfile_id", referencedColumnName = "id", nullable = false)
+	private UploadFile uploadFile;
 
 	@Column(nullable = false, length = 19)
 	private String createDate;
 
-	public StuClass_UploadFile(Long classId, Long fileId, String createDate) {
-		this.classId = classId;
-		this.fileId = fileId;
+	public StuClass_UploadFile(StuClass stuClass, UploadFile uploadFile, String createDate) {
+		this.stuClass = stuClass;
+		this.uploadFile = uploadFile;
 		this.createDate = createDate;
 	}
 }

@@ -1,12 +1,11 @@
 package com.mupei.assistant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -37,14 +36,18 @@ public class Message {
   
   @Column(length = 19, nullable = false)
   private String createTime;
-  
-  @Column
-  private Long roleId;
 
-  public Message(String content, String sort, String createTime, Long roleId) {
+  //创建人
+  @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
+  @ManyToOne(targetEntity = Role.class)
+  @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+  private Role role;
+
+  public Message(String content, String sort, String createTime, Role role) {
     this.content = content;
     this.sort = sort;
     this.createTime = createTime;
-    this.roleId = roleId;
+    this.role = role;
   }
+
 }

@@ -1,7 +1,11 @@
 package com.mupei.assistant.service.impl;
 
 import com.mupei.assistant.dao.RoleDao;
+import com.mupei.assistant.dao.StudentDao;
+import com.mupei.assistant.dao.TeacherDao;
 import com.mupei.assistant.model.Role;
+import com.mupei.assistant.model.Student;
+import com.mupei.assistant.model.Teacher;
 import com.mupei.assistant.service.RoleService;
 import com.mupei.assistant.utils.EmailUtil;
 import com.mupei.assistant.utils.EncryptUtil;
@@ -19,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Slf4j
@@ -26,6 +31,10 @@ import org.springframework.util.StringUtils;
 public class RoleServiceImpl implements RoleService {
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private TeacherDao teacherDao;
+	@Autowired
+	private StudentDao studentDao;
 	@Autowired
 	private SendLinkUtil sendLinkUtil;
 	@Autowired
@@ -50,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
 		String encrypted;
 		try {
 			encrypted = encryptUtil.encryptWithSHA(password, passwordAlgorithm, passwordSalt);
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -79,9 +88,10 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public Boolean reg(Role role, String currentTime, String ip) {
 		String email = role.getEmail();
-		log.debug("emial{}--{}",role.getEmail(),role.getPassword());
+		log.debug("email{}--{}",role.getEmail(),role.getPassword());
 		//判重
 		Optional<Role> optional = roleDao.findByEmail(email);
 		boolean stat = false;
@@ -99,7 +109,7 @@ public class RoleServiceImpl implements RoleService {
 		String encrypted;
 		try {
 			encrypted = encryptUtil.encryptWithSHA(role.getPassword(), passwordAlgorithm, passwordSalt);
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -126,6 +136,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public Boolean activateReg(String encryptedEmail, String encryptedVerifyCode, String currentTime, String ipAddr) {
 		//验证数据合法性
 		if (encryptedEmail == null || "".equals(encryptedEmail))
@@ -147,7 +158,7 @@ public class RoleServiceImpl implements RoleService {
 		String checkVerifyCode;
 		try {
 			checkVerifyCode = encryptUtil.encryptWithSHA(verifyCode, verifyCodeAlgorithm);
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			log.error("【activateReg】{}Redis内部验证码加密出错！", email);
 			return false;
@@ -158,6 +169,12 @@ public class RoleServiceImpl implements RoleService {
 				Role role = findByEmail.get();
 				role.setActivated(true);
 				roleDao.save(role);
+				if("t".equals(role.getSort())){
+					//使用原生SQL语句插入，否则使用save()方法插入的实体属性的父类属性需要满足其父类表字段的约束条件（非空）
+					teacherDao.save(new Teacher(), role.getId());
+				} else if("s".equals(role.getSort())){
+					studentDao.save(new Student(), role.getId());
+				}
 			}
 			log.debug("【activateReg】{}账号激活时间：{}", email, currentTime);
 			log.debug("【activateReg】{} IP：{}", email, ipAddr);
@@ -210,6 +227,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public Boolean resetPassword(String email, String password, String currentTime, String ipAddr) {
 		if(StringUtils.isEmpty(email))
 			return false;
@@ -222,7 +240,7 @@ public class RoleServiceImpl implements RoleService {
 			String encrypted;
 			try {
 				encrypted = encryptUtil.encryptWithSHA(password, passwordAlgorithm, passwordSalt);
-			} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				return false;
 			}
@@ -233,5 +251,4 @@ public class RoleServiceImpl implements RoleService {
 		}
 		return false;
 	}
-
 }

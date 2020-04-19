@@ -1,20 +1,18 @@
 package com.mupei.assistant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -72,5 +70,14 @@ public class Role {
   //注册激活标志位
   @Column(columnDefinition = "tinyint(1) not null default '0'")
   private Boolean activated;
-  
+
+  @ToString.Exclude
+  @JsonIgnore
+  @OneToMany(targetEntity = Message.class, mappedBy = "role")
+  private Set<Message> messages = new HashSet<>();
+
+  @ToString.Exclude
+  @JsonIgnore
+  @OneToMany(targetEntity = UploadFile.class, mappedBy = "role")
+  private Set<UploadFile> uploadFiles = new HashSet<>();
 }

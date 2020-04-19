@@ -26,12 +26,6 @@ public class StuClassServiceImpl implements StuClassService {
     @Autowired
     private CourseDao courseDao;
     @Autowired
-    private StuClass_StudentDao stuClass_studentDao;
-    @Autowired
-    private StuClass_MessageDao stuClass_messageDao;
-    @Autowired
-    private StuClass_UploadFileDao stuClass_uploadFileDao;
-    @Autowired
     private JsonUtil jsonUtil;
 
     @Override
@@ -47,14 +41,14 @@ public class StuClassServiceImpl implements StuClassService {
 
     @Override
     @Transactional
-    public HashMap<String, Object> insertClass(String className, Long teacherId, Long courseId) {
-        StuClass stuClass = new StuClass(className, teacherId, courseId);
+    public HashMap<String, Object> insertClass(String className, Long courseId) {
+        StuClass stuClass = new StuClass(className, courseDao.findById(courseId).orElse(null));
         StuClass save = stuClassDao.save(stuClass);
         Long id = save.getId();
         HashMap<String, Object> map = new HashMap<>();
         map.put("classId", id);
         map.put("className", className);
-        log.debug("【stuClass/insertClass】插入班级信息,班级ID：{}，班级名称：{}，教师ID：{}，课程ID：{}", id, className, teacherId, courseId);
+        log.debug("【stuClass/insertClass】插入班级信息,班级ID：{}，班级名称：{}，课程ID：{}", id, className, courseId);
         return map;
     }
 
@@ -103,21 +97,13 @@ public class StuClassServiceImpl implements StuClassService {
     @Override
     @Transactional
     public void deleteClass(Long classId) {
-        //class_student <-> stuClass
-        //class_message <-> stuClass
-        //class_uploadFile <-> stuClass
-        if (stuClass_studentDao.existsByClassId(classId)){
-            stuClass_studentDao.deleteByClassId(classId);
-        }
-        if(stuClass_messageDao.existsByClassId(classId)){
-            stuClass_messageDao.deleteByClassId(classId);
-        }
-        if(stuClass_uploadFileDao.existsByClassId(classId)){
-            stuClass_uploadFileDao.deleteByClassId(classId);
-        }
-        log.debug("【stuClass/deleteClass】删除关联的班级的关系表，班级ID：{}", classId);
         stuClassDao.deleteById(classId);
         log.debug("【stuClass/deleteClass】删除班级，班级ID：{}", classId);
+    }
+
+    @Override
+    public Long getClassIdByCourseIdAndStuId(Long courseId, Long stuId) {
+        return stuClassDao.findByCourseIdAndStuId(courseId, stuId).getId();
     }
 
 }

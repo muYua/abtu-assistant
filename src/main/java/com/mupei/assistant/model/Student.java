@@ -1,16 +1,18 @@
 package com.mupei.assistant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -18,12 +20,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
 public class Student extends Role {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column
-  private Long id;
-  
   //学号
   @Column(length = 12)
   private String stuNumber;
@@ -44,4 +43,8 @@ public class Student extends Role {
   @Column(length = 4)
   private String enrollmentYear;
 
+  @ToString.Exclude
+  @JsonIgnore
+  @OneToMany(targetEntity = UsualPerformance.class, mappedBy = "student")
+  private Set<UsualPerformance> usualPerformances = new HashSet<>();
 }

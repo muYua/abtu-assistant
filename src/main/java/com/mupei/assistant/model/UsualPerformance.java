@@ -13,34 +13,31 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "stuclass_student")
+@Table(name = "usualperformance")
 @DynamicInsert
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor//无参构造函数，new时自动调用
-public class StuClass_Student {
+@NoArgsConstructor
+public class UsualPerformance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
 
-    @ManyToOne(targetEntity = StuClass.class)
-    @JoinColumn(name = "stuclass_id", referencedColumnName = "id", nullable = false)
-    private StuClass stuClass;
+    @ManyToOne(targetEntity = Course.class)
+    @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
+    private Course course;
 
-    @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
+//    @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
     @ManyToOne(targetEntity = Student.class)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    //学生的班级昵称
-    @Column(length = 13)
-    private String classNickname;
+    @Column(nullable = false)
+    private Integer score;
 
-    public StuClass_Student(StuClass stuClass, Student student) {
-        this.stuClass = stuClass;
-        this.student = student;
-    }
+    @Column(length = 19 ,nullable = false)
+    private String date;
 
 }

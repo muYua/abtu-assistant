@@ -1,6 +1,7 @@
 package com.mupei.assistant.controller;
 
 import com.mupei.assistant.model.UploadFile;
+import com.mupei.assistant.service.StuClassService;
 import com.mupei.assistant.service.UploadFileService;
 import com.mupei.assistant.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,20 @@ import java.util.ArrayList;
 public class UploadFileController {
     @Autowired
     private UploadFileService uploadFileService;
+    @Autowired
+    private StuClassService stuClassService;
 
-    @PostMapping("/uploadFiles")
+    @PostMapping("/uploadFilesByTeacher")
     public Json uploadFiles(@RequestParam("file") MultipartFile[] files, @RequestParam Long roleId,
                             @RequestParam Long courseId, @RequestParam Long classId, @RequestParam String sort) {
+        uploadFileService.uploadFiles(files, roleId, courseId, classId, sort);
+        return new Json(true);
+    }
+
+    @PostMapping("/uploadFilesByStudent")
+    public Json uploadFilesByStudent(@RequestParam("file") MultipartFile[] files, @RequestParam Long roleId,
+                            @RequestParam Long courseId, @RequestParam String sort) {
+        Long classId = stuClassService.getClassIdByCourseIdAndStuId(courseId, roleId);
         uploadFileService.uploadFiles(files, roleId, courseId, classId, sort);
         return new Json(true);
     }
@@ -31,17 +42,29 @@ public class UploadFileController {
     }
 
     @GetMapping("/getHomeworkFiles")
-    public Json getFiles(@RequestParam Long courseId, @RequestParam Long classId, @RequestParam String date,
-                               @RequestParam String sort, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
+    public Json getHomeworkFiles(@RequestParam Long courseId, @RequestParam Long classId, @RequestParam String date,
+                         @RequestParam String sort, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
         ArrayList<Object> files = uploadFileService.getHomeworkFilesByDate(courseId, classId, date, sort, pageNo, pageSize);
         Long count = uploadFileService.getFilesCountByDate(courseId, classId, date, sort);
-        return new Json(true, 0, files, count, "文件");
+        return new Json(true, 0, files, count, "作业文件");
     }
 
-    /* 批阅作业文件 */
-//	checkHomework
+    @GetMapping("/getHomeworkFilesByStudent")
+    public Json getHomeworkFilesByStudent(@RequestParam Long courseId, @RequestParam Long stuId, @RequestParam String date,
+                                 @RequestParam String sort, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
+        Long classId = stuClassService.getClassIdByCourseIdAndStuId(courseId, stuId);
+        ArrayList<Object> files = uploadFileService.getHomeworkFilesByDate(courseId, classId, date, sort, pageNo, pageSize);
+        Long count = uploadFileService.getFilesCountByDate(courseId, classId, date, sort);
+        return new Json(true, 0, files, count, "作业文件");
+    }
 
-    /* 下载作业文件 */
-//	downloadHomework
+    @GetMapping("/getTeachingFiles")
+    public Json getTeachingFiles(@RequestParam Long courseId, @RequestParam Long stuId, @RequestParam String date,
+                         @RequestParam String sort, @RequestParam Integer pageNo, @RequestParam Integer pageSize){
+        Long classId = stuClassService.getClassIdByCourseIdAndStuId(courseId, stuId);
+        ArrayList<Object> files = uploadFileService.getTeachingFilesByDate(courseId, classId, date, sort, pageNo, pageSize);
+        Long count = uploadFileService.getFilesCountByDate(courseId, classId, date, sort);
+        return new Json(true, 0, files, count, "课堂文件");
+    }
 
 }

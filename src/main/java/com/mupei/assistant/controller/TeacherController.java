@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mupei.assistant.service.TeacherService;
 
 @RequestMapping("/teacher")
-@RestController // @Controller + @ResponseBody
+@RestController
 public class TeacherController {
 	@Autowired
 	private TeacherService teacherService;

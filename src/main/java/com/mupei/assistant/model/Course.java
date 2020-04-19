@@ -1,18 +1,17 @@
 package com.mupei.assistant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -27,20 +26,30 @@ public class Course {
     @Column
     private Long id;
 
-//    //课程编号
-//    @Column(length = 30, nullable = false)
-//    private String courseNumber;
-
     //课程名称
     @Column(length = 30, nullable = false)
     private String courseName;
 
     //主讲教师
-    @Column(nullable = false)
-    private Long teacherId;
+//    @JsonProperty("teacherId")//序列化重命名
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")//只进行一次完整属性持久化，其余相同的实体用id替代
+//    @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
+    @ManyToOne(targetEntity = Teacher.class)
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Teacher teacher;
 
-    public Course(String courseName, Long teacherId) {
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(targetEntity = StuClass.class, mappedBy = "course")
+    private Set<StuClass> stuClasses = new HashSet<>();
+
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(targetEntity = UsualPerformance.class, mappedBy = "course")
+    private Set<UsualPerformance> usualPerformances = new HashSet<>();
+
+    public Course(String courseName, Teacher teacher) {
         this.courseName = courseName;
-        this.teacherId = teacherId;
+        this.teacher = teacher;
     }
 }

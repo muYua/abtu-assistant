@@ -39,8 +39,8 @@ public class StuClassController {
     
     //map(classId、className)
     @PostMapping("/insertClass")
-    public Json insertClass(@RequestParam String className, @RequestParam Long teacherId, @RequestParam Long courseId) {
-        HashMap<String, Object> map = stuClassService.insertClass(className, teacherId, courseId);
+    public Json insertClass(@RequestParam String className, @RequestParam Long courseId) {
+        HashMap<String, Object> map = stuClassService.insertClass(className, courseId);
         return new Json(true, map);
     }
 

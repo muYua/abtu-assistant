@@ -6,9 +6,9 @@ spring:
   datasource: #数据库基本配置
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://www.izumieita.cn:3306/assistant?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    url: jdbc:mysql://127.0.0.1:3306/assistant?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
-    password: IZUMIeita@mysql24
+    password: 123456
     initialSize: 5
     minIdle: 5
     maxActive: 20
@@ -93,7 +93,7 @@ logging: #日志输出
   level:
     com.mupei.assistant: trace #输出日志最低级别
 #  path: /spring-assistant/log #指定目录，日志名默认spring.log；在当前磁盘的根目录下开始创建
-  file: F:/assistant-log/assistant.log #不指定路径-当前项目下生成日志；指定完整路径-按路径生成日志
+  file: D:/ABTU-assistant/assistant-log/assistant.log #不指定路径-当前项目下生成日志；指定完整路径-按路径生成日志
 #  pattern:
 #    console: #设置控制台的日志输出格式
 #    file: #设置文件中的日志输出格式
@@ -104,7 +104,7 @@ file:
   staticAccessPath: /static/** #静态资源对外暴露的访问路径
   #文件上传目录（注意Linux和Windows上的目录结构不同）
   #file.uploadFolder=/root/uploadFiles/
-  uploadFolder: d://UploadFiles/
+  uploadFolder: D:\ABTU-assistant\UploadFiles
 ##---------------------------------------------------  
 encryptUtil:
   tempSalt: abcdefghijklmnopqrstuvwxyz

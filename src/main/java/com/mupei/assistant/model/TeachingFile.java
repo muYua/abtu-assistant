@@ -9,18 +9,13 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name = "teacherfile")
 @DynamicInsert
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 public class TeachingFile extends UploadFile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
-
     //发布时间
     @Column(length = 10)
     private String releasedTime;

@@ -60,7 +60,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                             if (sessionStorage.getItem("selectedCourseName") !== null) {
                                 sessionStorage.removeItem("selectedCourseName");
                             }
-                            // flushClass();
+                            courseTimetable();
                             return false;
                         }
                         let content = "";
@@ -86,7 +86,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                             console.log("初始化selectedCourseName", courseList[0]['courseName']);
                             sessionStorage.setItem("selectedCourseName", courseList[0]['courseName']);
                         }
-                        // flushClass();
+                        courseTimetable();
                     } else {
                         console.log("课程信息获取失败！")
                     }
@@ -113,12 +113,15 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     console.log("selectedCourseName" + DOM_VALUE);
                     sessionStorage.setItem("selectedCourse", DOM_ID.slice(7));
                     sessionStorage.setItem("selectedCourseName", DOM_VALUE);
+                    flushCurrentStatus();
                     break;
                 case "addCourse": //添加课程
                     addCourse();
+                    flushCurrentStatus();
                     break;
                 case "deleteCourse": //删除课程
                     deleteCourse();
+                    flushCurrentStatus();
                     break;
             }
         });
@@ -129,14 +132,14 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             let status = sessionStorage.getItem("status");
             console.log("刷新当前页面。status：" + status);
             switch (status) {
-                case "checkSignIn" :
-                    checkSignIn();
+                case "courseTimetable" :
+                    courseTimetable();
                     break;
-                case "sendHomework" :
-                    sendHomework();
+                case "showTeachingFiles" :
+                    showTeachingFiles();
                     break;
-                case "getHomework" :
-                    getHomework();
+                case "usualPerformance" :
+                    usualPerformance();
                     break;
                 case "sendTeachingFiles" :
                     sendTeachingFiles();
@@ -217,7 +220,6 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
         /* 作业查看 */
         $("#getHomework").on("click", function () {
             $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
-
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
             CONTENT_BODY_DIV.empty();
@@ -233,7 +235,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                             <a><cite>查看作业</cite></a>
                         </span>
                     </div>
-                    <blockquote class="layui-elem-quote">目前没有课程或班级信息！</blockquote>
+                    <blockquote class="layui-elem-quote">目前没有课程信息！</blockquote>
                 `);
                 element.render('breadcrumb');//重新进行对面包屑的渲染
                 return false;
@@ -243,9 +245,9 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                  <div id="breadcrumb">
                      <span class="layui-breadcrumb">
                          <a>学生主页</a>
-                         <a><cite>${selectedCourseName}</cite></a>
                          <a><cite>课后作业</cite></a>
                          <a><cite>查看作业</cite></a>
+                         <a><cite>${selectedCourseName}</cite></a>
                      </span>
                  </div>
                  <fieldset class="layui-elem-field layui-field-title">
@@ -311,37 +313,61 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             //渲染表格
             table.render({
                 elem: '#homeworkFiles'
-                , url: 'http://localhost:8080/assistant/student/getFiles' //数据接口
+                , url: utils.getDomainName() + '/uploadFile/getHomeworkFilesByStudent' //数据接口
                 , where: {
-                    sort: "1"
+                    courseId: selectedCourse,
+                    stuId: stuId,
+                    date: utils.getFormatDate("yyyy-MM-dd"),
+                    sort: "ht"
                 }
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'fileId', title: '文件ID'}
+                    {field: 'id', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {field: 'roleName', title: '创建人', align: 'center'}
+                    , {
+                        field: 'role', title: '创建人', align: 'center'
+                        , templet: function (d) {
+                            return d.role['nickname'];
+                        }
+                    }
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
                     , {fixed: 'right', title: '操作', toolbar: '#homeworkFilesRowBar', align: 'center'} //行工具栏
                 ]]
+                , request: {
+                    pageName: 'pageNo' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
             });//end render(homeworkFiles)
             table.render({
                 elem: '#submittedFiles'
-                , url: '/assistant/student/getFiles' //数据接口
+                , url: utils.getDomainName() + '/uploadFile/getHomeworkFilesByStudent' //数据接口
                 , where: {
-                    sort: "2"
+                    courseId: selectedCourse,
+                    stuId: stuId,
+                    date: utils.getFormatDate("yyyy-MM-dd"),
+                    sort: "hs"
                 }
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'fileId', title: '文件ID'}
+                    {field: 'id', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {field: 'roleName', title: '创建人', align: 'center'}
+                    , {
+                        field: 'role', title: '创建人', align: 'center'
+                        , templet: function (d) {
+                            return d.role['nickname'];
+                        }
+                    }
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
                     , {fixed: 'right', title: '操作', toolbar: '#submittedFilesRowBar', align: 'center'} //行工具栏
                 ]]
+                , request: {
+                    pageName: 'pageNo' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
             });//end render(submittedFiles)
             //监听行点击事件
             table.on('row(homeworkFiles)', function (obj) {
@@ -358,25 +384,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 let data = obj.data;
                 console.log(data + '====^1');
                 if (obj.event === 'download') {
-                    $.ajax({
-                        url: "/assistant/static/" + data.fileName,
-                        data: {
-                            count: 1
-                        },
-                        dataType: 'json',// 服务器返回json格式数据
-                        type: 'get',// HTTP请求类型
-                        timeout: 10000,// 超时时间设置为10秒
-                        success: function (data) {
-                            if (data.success) {
 
-                            }// end if
-                        },
-                        error: function (xhr, type, errorThrown) {
-                            console.log(xhr);
-                            console.log(type);
-                            console.log(errorThrown);
-                        }
-                    });// end ajax
                 }// end obj.event==='download'
             });// end table.on.tool(homeworkFiles)
             table.on('tool(submittedFiles)', function (obj) {
@@ -384,7 +392,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 console.log(data + '====^2');
                 if (obj.event === 'download') {
 //	            	 window.open(url="http://localhost:8080/assistant/static/"+data.fileName);
-                    const LINK = $(`<a href='http://localhost:8080/assistant/static/${data.fileName}' download='${data.fileName}'>download</a>`);
+                    const LINK = $(`<a href='${data['fileUrl']}' download='${data.fileName}'>download</a>`);
                     $(document.body).append(LINK);
                     $(LINK).click();
                     $(LINK).remove();
@@ -417,18 +425,32 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
         /* 作业提交 */
         $("#submitHomework").on("click", function () {
             $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
-
+            let selectedCourseName = sessionStorage.getItem("selectedCourseName")
+                , selectedCourse = sessionStorage.getItem("selectedCourse");
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
             CONTENT_BODY_DIV.empty();
-
+            if (selectedCourseName == null) {
+                CONTENT_BODY_DIV.html(`
+                    <!-- 面包屑 -->
+                    <div id="breadcrumb">
+                        <span class="layui-breadcrumb">
+                            <a><cite>学生主页</cite></a>
+                            <a><cite>提交作业</cite></a>
+                        </span>
+                    </div>
+                    <blockquote class="layui-elem-quote">目前没有课程信息！</blockquote>
+                `);
+                element.render('breadcrumb');//重新进行对面包屑的渲染
+                return false;
+            }
             CONTENT_BODY_DIV.html(`
                 <!-- 面包屑 -->
                 <div id="breadcrumb">
                     <span class="layui-breadcrumb">
-                        <a href="#">学生主页</a>
-                        <a href="#">课后作业</a>
-                        <a><cite>作业提交</cite></a>
+                        <a><cite>学生主页</cite></a>
+                        <a><cite>提交作业</cite></a>
+                        <a><cite>${selectedCourseName}</cite></a>
                     </span>
                 </div>
                 <!-- 多文件拖拽上传 -->
@@ -456,13 +478,14 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             element.render('breadcrumb');//重新进行对面包屑的渲染
 
             //多文件上传列表
-            let encryptRoleId = localStorage.getItem("id");
             let uploadListView = $('#uploadList')
                 , uploadListIns = upload.render({
                 elem: '#upload'
-                , url: 'http://localhost:8080/assistant/student/uploadFiles' //上传接口
+                , url: utils.getDomainName() + '/uploadFile/uploadFilesByStudent' //上传接口
                 , data: {
-                    roleId: encryptRoleId
+                    roleId: stuId,
+                    courseId: selectedCourse,
+                    sort: "hs"
                 }
                 , accept: 'file' //允许上传的文件类型,普通文件
                 , multiple: true
@@ -519,20 +542,35 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
         /*--------------END 作业提交---------------*/
 
         /*课堂文件*/
-        $("#showTeachingFiles").on("click", function () {
+        function showTeachingFiles () {
             $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
-
+            let selectedCourseName = sessionStorage.getItem("selectedCourseName")
+                , selectedCourse = sessionStorage.getItem("selectedCourse");
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
             CONTENT_BODY_DIV.empty();
-
+            if (selectedCourseName == null) {
+                CONTENT_BODY_DIV.html(`
+                    <!-- 面包屑 -->
+                    <div id="breadcrumb">
+                        <span class="layui-breadcrumb">
+                            <a><cite>学生主页</cite></a>
+                            <a><cite>课堂文件</cite></a>
+                        </span>
+                    </div>
+                    <blockquote class="layui-elem-quote">目前没有课程信息！</blockquote>
+                `);
+                element.render('breadcrumb');//重新进行对面包屑的渲染
+                return false;
+            }
             CONTENT_BODY_DIV.html(` 		 
            	 <!-- 面包屑 -->
              <div id="breadcrumb">
-                 <span class="layui-breadcrumb">
-            		 <a href="#">学生主页</a>
-                     <a><cite>课堂文件</cite></a>
-                 </span>
+             <span class="layui-breadcrumb">
+                 <a><cite>学生主页</cite></a>
+                 <a><cite>课堂文件</cite></a>
+                 <a><cite>${selectedCourseName}</cite></a>
+             </span>
              </div>
              <table class="layui-hide" id="teachingFiles" lay-filter="teachingFiles"></table>
              <script type="text/html" id="teachingFilesRowBar">
@@ -543,78 +581,208 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             //渲染表格
             table.render({
                 elem: '#teachingFiles'
-                , url: 'http://localhost:8080/assistant/student/getFiles' //数据接口
+                , url: utils.getDomainName() + '/uploadFile/getTeachingFiles' //数据接口
                 , where: {
-                    sort: "3"
+                    courseId: selectedCourse,
+                    stuId: stuId,
+                    date: utils.getFormatDate("yyyy-MM-dd"),
+                    sort: "l"
                 }
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'fileId', title: '文件ID'}
+                    {field: 'id', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
                     , {field: 'roleName', title: '创建人', align: 'center'}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
+                    , {field: 'fileUrl', title: '文件获取路径', hide: true}
                     , {fixed: 'right', title: '操作', toolbar: '#teachingFilesRowBar', align: 'center'} //行工具栏
                 ]]
+                , page: false
+                , request: {
+                    pageName: 'pageNo' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
             });//end render(teachingFiles)
-
             table.on('row(teachingFiles)', function (obj) {
                 //标注选中行样式
                 obj.tr.addClass("layui-table-click").siblings().removeClass("layui-table-click");
             });//end 监听行点击事件
-
-            table.on('tool(submittedFiles)', function (obj) {
+            table.on('tool(teachingFiles)', function (obj) {
                 let data = $(obj.data);
                 console.log(data + '====^2');
                 if (obj.event === 'download') {
-                    window.open(url = "http://localhost:8080/assistant/static/" + data.fileName);
-//                    const LINK = $(`<a href='http://localhost:8080/assistant/static/${data.fileName}' download='${data.fileName}'>download</a>`);  
+                    window.open(data['fileUrl']);
+//                    const LINK = $(`<a href='http://localhost:8080/assistant/static/${data.fileName}' download='${data.fileName}'>download</a>`);
 //                    $(document.body).append(LINK); 
 //                    $(LINK).click();
 //                    $(LINK).remove();
                 }// end obj.event==='download'
-            });//end table.on.tool(teachingFiles)           
+            });//end table.on.tool(teachingFiles)
+        }
+        $("#showTeachingFiles").on("click", function () {
+            showTeachingFiles();
+            sessionStorage.setItem("status", "showTeachingFiles");
         });//end teachingFiiles.onclick
         /*--------------END 课堂文件---------------*/
 
         /*查询课表*/
-        $("#courseTimetable").on("click", function () {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+        function courseTimetable() {
+            $("#courseTimetable").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
             CONTENT_BODY_DIV.empty();
-
             CONTENT_BODY_DIV.html(`
                 <!-- 面包屑 -->
                 <div id="breadcrumb">
                     <span class="layui-breadcrumb">
-                        <a href="#">教师主页</a>
+                        <a><cite>学生主页</cite></a>
                         <a><cite>查询课表</cite></a>
                     </span>
                 </div>
+                <table class="layui-hide" id="courseTimetableInfo" lay-filter="courseTimetableInfo"></table>
             `);
             element.render('breadcrumb');//重新进行对面包屑的渲染
+            //渲染表格
+            table.render({
+                elem: '#courseTimetableInfo'
+                , url: utils.getDomainName() + '/course/getCourseInfoOfStudent' //数据接口
+                , where: {
+                    stuId: stuId,
+                }
+                , method: 'get'
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    {field: 'id', title: '课程ID'}
+                    , {field: 'courseName', title: '课程名'}
+                    , {field: 'teacherName', title: '任课教师'}
+                    , {field: 'className', title: '所属班级'}
+                ]]
+                , page: false
+            });//end render(signIn)
+            //监听行点击事件
+            table.on('row(courseTimetableInfo)', function (obj) {
+                //标注选中行样式
+                obj.tr.addClass("layui-table-click").siblings().removeClass("layui-table-click");
+            });
+        }
+        $("#courseTimetable").on("click", function () {
+            courseTimetable();
+            sessionStorage.setItem("status", "courseTimetable");
         });// end courseTimetable.onclick
         /*--------------END 查询课表---------------*/
 
         /*平时成绩*/
-        $("#usualPerformance").on("click", function () {
+        function usualPerformance () {
             $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            let selectedCourseName = sessionStorage.getItem("selectedCourseName")
+                , selectedCourse = sessionStorage.getItem("selectedCourse");
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
             CONTENT_BODY_DIV.empty();
-
+            if (selectedCourseName == null) {
+                CONTENT_BODY_DIV.html(`
+                    <!-- 面包屑 -->
+                    <div id="breadcrumb">
+                        <span class="layui-breadcrumb">
+                            <a><cite>学生主页</cite></a>
+                            <a><cite>平时成绩</cite></a>
+                        </span>
+                    </div>
+                    <blockquote class="layui-elem-quote">目前没有课程信息！</blockquote>
+                `);
+                element.render('breadcrumb');//重新进行对面包屑的渲染
+                return false;
+            }
             CONTENT_BODY_DIV.html(`
                 <!-- 面包屑 -->
                 <div id="breadcrumb">
                     <span class="layui-breadcrumb">
-                        <a href="#">教师主页</a>
+                        <a><cite>学生主页</cite></a>
                         <a><cite>平时成绩</cite></a>
+                        <a><cite>${selectedCourse}</cite></a>
                     </span>
                 </div>
+                <table class="layui-hide" id="usualPerformanceInfo" lay-filter="usualPerformanceInfo"></table>
+	            <script type="text/html" id="usualPerformanceInfoRowBar">
+	        		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	        		<a class="layui-btn layui-btn-xs" lay-event="add">添加</a>
+	        		<a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
+	    		</script>
             `);
             element.render('breadcrumb');//重新进行对面包屑的渲染
+
+
+            table.render({
+                elem: '#usualPerformanceInfo'
+                , url: utils.getDomainName() + '/usualPerformance/getUsualPerformances' //数据接口
+                , where: {
+                    courseId: selectedCourse,
+                    stuId: stuId
+                }
+                , method: 'get'
+                , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    {field: 'id', title: '学生ID'}
+                    , {field: 'stuNumber', title: '学号'}
+                    , {field: 'stuName', title: '学生姓名'}
+                    , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏
+                ]]
+                , page: true
+                , request: {
+                    pageName: 'pageNo' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                , done: function (res, curr, count) {
+                    let myData = [];
+                    let dataList = res.data;
+                    let number;
+                    myData[0] = {field: 'stuId', title: '学生ID'};
+                    myData[1] = {field: 'stuNumber', title: '学号'};
+                    myData[2] = {field: 'stuName', title: '学生姓名', align: 'center'};
+                    $.each(dataList, function (i, data) {
+                        console.log(i+'次');
+                        //data.date -> i
+                        //数据 -> data.score
+                        myData[i] = {field: '' + data.score, title: '第' + i + '次'};
+                        number = i;
+                    });
+                    myData[number+1] = {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'};//行工具栏
+                    table.init('userFilter', { //转换成静态表格
+                        cols: [myData]
+                        , data: res.data
+                        , limit: 10
+                    });
+                }
+            });//end render(usualPerformance)
+            //监听行点击事件
+            table.on('row(usualPerformanceInfo)', function (obj) {
+                //标注选中行样式
+                obj.tr.addClass("layui-table-click").siblings().removeClass("layui-table-click");
+            });
+            // 监听表格行工具栏时间
+            table.on('tool(usualPerformanceInfo)', function (obj) { //tool(lay-filter)
+                let data = obj.data;
+                if (obj.event === 'edit') {
+                    // layer.open({
+                    //     type: 2, //iframe层
+                    //     area: ['420px', '600px'], //宽高
+                    //     fixed: true, //固定
+                    //     maxmin: false, //最大小化
+                    //     closeBtn: 1, //右上关闭
+                    //     shadeClose: false, //点击遮罩关闭
+                    //     resize: false, //是否允许拉伸
+                    //     move: false,  //禁止拖拽
+                    //     title: '编辑平时成绩',
+                    //     content: utils.getDomainName() + '/teacher_usualPerformance.html' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    // });
+                }
+            });// end table.on.tool(homeworkFiles)
+        }
+        $("#usualPerformance").on("click", function () {
+            usualPerformance();
+            sessionStorage.setItem("status", "usualPerformance");
         });// end usualPerformance.onclick
         /*--------------END 平时成绩---------------*/
 
@@ -692,7 +860,6 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 }
             });//end ajax
         }
-
         $("#showMessage").on("click", function () {
             showMessage();
             sessionStorage.setItem("status", "showMessage");

@@ -20,4 +20,6 @@ public interface CourseService {
     ArrayList<Course> getCourseListByStuId(Long stuId);
 
     HashMap<String, Object> addCourseOfStudent(Long courseId, Long classId, Long stuId);
+
+    ArrayList<Object> getCourseInfoOfStudent(Long stuId);
 }

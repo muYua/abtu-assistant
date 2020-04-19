@@ -1,12 +1,11 @@
 package com.mupei.assistant.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -15,7 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table
+@Table(name = "stuclass")
 @DynamicInsert
 @Getter
 @Setter
@@ -31,17 +30,14 @@ public class StuClass {//非通俗意义上的班级，便于教师管理学生�
 	@Column(length = 28, nullable = false)
 	private String className;
 
-	// 教师ID
-	@Column(nullable = false)
-	private Long teacherId;
-
 	// 课程ID
-	@Column(nullable = false)
-	private Long courseId;
+	@ManyToOne(targetEntity = Course.class)
+	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
+	private Course course;
 
-	public StuClass(String className, Long teacherId, Long courseId){
+	public StuClass(String className, Course course) {
 		this.className = className;
-		this.teacherId = teacherId;
-		this.courseId = courseId;
+		this.course = course;
 	}
+
 }

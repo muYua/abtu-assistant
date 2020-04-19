@@ -43,10 +43,31 @@ public class CourseController {
         return new Json(success, code, course, count, msg);
     }
 
+    @GetMapping("/getCourseInfoOfStudent")
+    public Json getCourseInfoOfStudent(@RequestParam Long stuId) {
+        ArrayList<Object> courses = courseService.getCourseInfoOfStudent(stuId);
+        boolean success = true;
+        int code = 0;
+        String msg = "";
+        if (courses == null) {
+            success = false;
+            code = -1;
+            msg = "获取课程数据失败！";
+        }
+        return new Json(success, code, courses, 0L, msg);
+    }
+
     //map(courseId、courseName)
     @PostMapping("/insertCourse")
     public Json insertCourse(@RequestParam Long teacherId, @RequestParam String courseName) {
         HashMap<String, Object> map = courseService.insertCourse(teacherId, courseName);
+        return new Json(true, map);
+    }
+
+    //map(courseName)
+    @PostMapping("/addCourseOfStudent")
+    public Json addCourseOfStudent(@RequestParam Long courseId, @RequestParam Long classId, @RequestParam Long stuId) {
+        HashMap<String, Object> map = courseService.addCourseOfStudent(courseId, classId, stuId);
         return new Json(true, map);
     }
 
@@ -56,10 +77,5 @@ public class CourseController {
         return new Json(true);
     }
 
-    //map(courseName)
-    @PostMapping("/addCourseOfStudent")
-    public Json addCourseOfStudent(@RequestParam Long courseId, @RequestParam Long classId, @RequestParam Long stuId) {
-        HashMap<String, Object> map = courseService.addCourseOfStudent(courseId, classId, stuId);
-        return new Json(true, map);
-    }
+
 }

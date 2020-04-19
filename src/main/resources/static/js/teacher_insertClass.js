@@ -53,7 +53,6 @@ require(['layui', 'utils'], function (layui, utils) {
                 data: {
                     className: CLASS_NAME_VALUE,
                     courseId: courseId,
-                    teacherId: teacherId
                 },
                 success: function (data) {
                     let message = data.msg;
