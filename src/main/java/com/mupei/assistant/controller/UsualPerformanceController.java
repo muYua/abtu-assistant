@@ -22,7 +22,7 @@ public class UsualPerformanceController {
         ArrayList<UsualPerformance> list = usualPerformanceService.getUsualPerformances(courseId, stuId);
         boolean success = true;
         int code = 0;
-        String msg = "平时成绩";
+        String msg = null;
         if (list == null) {
             success = false;
             code = -1;

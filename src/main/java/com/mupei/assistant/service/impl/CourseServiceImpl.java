@@ -128,6 +128,10 @@ public class CourseServiceImpl implements CourseService {
             log.error("【course/addStuClassOfStudent】课程不存在，课程ID：{}", courseId);
         }
         //course <-> student
+        if(student_courseDao.countByCourseIdAndStuId(courseId, stuId) > 0){
+            map.put("msg", "已经选择了该课程。");
+            return map;
+        }
         Student_Course student_course = new Student_Course(studentDao.findById(stuId).orElse(null), courseDao.findById(courseId).orElse(null));
         student_courseDao.save(student_course);
         //class <-> student

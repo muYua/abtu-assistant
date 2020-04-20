@@ -45,7 +45,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public ArrayList<Message> getMessage(Long stuId, Long courseId, String sort) {
+    public ArrayList<Message> getMessage(Long stuId, Long courseId, String date, String sort) {
         ArrayList<StuClass_Student> stuClass_students = stuClass_studentDao.findByStuId(stuId);
         if(stuClass_students != null && stuClass_students.size() != 0){
             //student <-> stuClass => stuClass
@@ -57,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
                     //course => stuClass <-> message => message
                     stuClass_messageDao.findByClassId(courseId).forEach(stuClass_message -> {
                         Message message = stuClass_message.getMessage();
-                        if (Objects.equals(message.getSort(), sort)) {
+                        if (Objects.equals(message.getSort(), sort) && date.equals(message.getCreateTime().substring(0, 10))) {
                             messages.add(message);
                         }
                     });

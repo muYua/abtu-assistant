@@ -11,9 +11,6 @@ public interface StuClass_StudentDao extends CrudRepository<StuClass_Student, Lo
     @Query("DELETE FROM StuClass_Student ss WHERE ss.stuClass.id = ?1")
     void deleteByClassId(Long classId);
 
-    @Query("SELECT COUNT(ss.id) FROM StuClass_Student ss WHERE ss.stuClass.id = ?1")
-    boolean existsByClassId(Long classId);
-
     @Query("FROM StuClass_Student ss WHERE ss.stuClass.id = ?1")
     ArrayList<StuClass_Student> findByClassId(Long classId);
 

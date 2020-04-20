@@ -2,10 +2,6 @@ package com.mupei.assistant.model;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -14,7 +10,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "student_uploadfile")
+@Table(name = "student_course"
+        , uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id", "course_id"})})
 @DynamicInsert
 @Getter
 @Setter
@@ -36,8 +33,8 @@ public class Student_Course {
   private Course course;
 
   //考勤记录
-  @Column
-  private Long fileId;
+  @Column(name = "signinfile_id")
+  private Long signInFileId;
   
   //平时成绩
   @Column(length = 3)

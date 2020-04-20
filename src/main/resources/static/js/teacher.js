@@ -278,7 +278,6 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
         /*------------END 监听头部导航栏-----------------*/
 
         /* 课程管理 */
-
         //新建课程
         function insertCourse() {
             layer.open({
@@ -320,7 +319,6 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
         /*---------------END 课程管理---------------*/
 
         /* 班级管理 */
-
         //新建班级
         function insertClass() {
             layer.open({
@@ -360,7 +358,6 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }
             });
         }
-
         /*----------------END 班级管理----------------*/
 
         /* 考勤情况 */
@@ -450,7 +447,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
 
         /*布置作业*/
         function sendHomework() {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            $("#sendHomework").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedClassName = sessionStorage.getItem("selectedClassName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse")
@@ -633,7 +630,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
 
         /*接收作业*/
         function getHomework() {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            $("#getHomework").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedClassName = sessionStorage.getItem("selectedClassName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse")
@@ -723,7 +720,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
 
         /*课件下发*/
         function sendTeachingFiles() {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            $("#sendTeachingFiles").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedClassName = sessionStorage.getItem("selectedClassName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse")
@@ -848,7 +845,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
 
         /*平时成绩*/
         function usualPerformance() {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            $("#usualPerformance").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedClassName = sessionStorage.getItem("selectedClassName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse")

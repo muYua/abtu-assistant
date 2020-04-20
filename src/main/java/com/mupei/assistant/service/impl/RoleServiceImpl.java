@@ -75,13 +75,18 @@ public class RoleServiceImpl implements RoleService {
 			log.error("【loginCheck】{}登录校验失败！", roleNumber);
 			return null;
 		}
+		HashMap<String, Object> map = new HashMap<>();
+		if (!role.getActivated()){
+			log.error("【loginCheck】账号未激活！");
+			map.put("msg", "账号未激活！");
+			return map;
+		}
 		//更新登录时间、登录IP
 		role.setLoginTime(currentTime);
 		role.setLoginIP(ipAddr);
 		roleDao.save(role);
 		log.debug("【loginCheck】{}登录时间：{}", roleNumber, currentTime);
 		log.debug("【loginCheck】{}登录IP：{}", roleNumber, ipAddr);
-		HashMap<String, Object> map = new HashMap<>();
 		map.put("roleId", role.getId());
 		map.put("roleSort", role.getSort());
 		return map;
@@ -91,7 +96,6 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional
 	public Boolean reg(Role role, String currentTime, String ip) {
 		String email = role.getEmail();
-		log.debug("email{}--{}",role.getEmail(),role.getPassword());
 		//判重
 		Optional<Role> optional = roleDao.findByEmail(email);
 		boolean stat = false;

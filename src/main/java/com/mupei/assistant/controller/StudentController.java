@@ -22,7 +22,7 @@ public class StudentController {
         ArrayList<Student> students = studentService.getStudentInfos(classId);
         boolean success = true;
         int code = 0;
-        String msg = "";
+        String msg = null;
         if (students == null) {
             success = false;
             code = -1;

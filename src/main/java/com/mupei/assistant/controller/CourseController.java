@@ -34,7 +34,7 @@ public class CourseController {
         Long count = courseService.getCourseCount(teacherId);
         boolean success = true;
         int code = 0;
-        String msg = "";
+        String msg = null;
         if (course == null) {
             success = false;
             code = -1;
@@ -48,7 +48,7 @@ public class CourseController {
         ArrayList<Object> courses = courseService.getCourseInfoOfStudent(stuId);
         boolean success = true;
         int code = 0;
-        String msg = "";
+        String msg = null;
         if (courses == null) {
             success = false;
             code = -1;
@@ -68,6 +68,7 @@ public class CourseController {
     @PostMapping("/addCourseOfStudent")
     public Json addCourseOfStudent(@RequestParam Long courseId, @RequestParam Long classId, @RequestParam Long stuId) {
         HashMap<String, Object> map = courseService.addCourseOfStudent(courseId, classId, stuId);
+        if(map.get("msg") != null) return new Json(false, map.get("msg").toString());
         return new Json(true, map);
     }
 

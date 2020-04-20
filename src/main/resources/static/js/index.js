@@ -64,7 +64,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
                 type: 'post',//HTTP请求类型
                 timeout: 10000,//超时时间设置为10秒
                 success: function (json) {
-            	    let message = json.msg;
+            	    let message = json['msg'];
                     if (json.success) {
                         let roleId = json.map['roleId'];
                         let roleSort = json.map['roleSort'];
@@ -77,7 +77,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'background', 'iconfont'], funct
                         if(roleSort === "s")
                             window.location.href = 'student.html';
                     } else {
-                        if (typeof message !== undefined && !utils.isEmpty(message))
+                        if (typeof message !== undefined && !utils.isEmpty(message) && message !=="")
                             layerAnim6(message);
                         else
                             layerAnim6('用户名或密码错误！');

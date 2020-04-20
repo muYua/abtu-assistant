@@ -23,8 +23,8 @@ public class MessageController {
     }
 
     @GetMapping("/getMessage")
-    public Json getMessage(@RequestParam Long stuId, @RequestParam Long courseId, @RequestParam String sort){
-        ArrayList<Message> messages = messageService.getMessage(stuId, courseId, sort);
+    public Json getMessage(@RequestParam Long stuId, @RequestParam Long courseId, @RequestParam String date, @RequestParam String sort){
+        ArrayList<Message> messages = messageService.getMessage(stuId, courseId, date, sort);
         if(messages == null)
             return new Json(false);
         return new Json(true, messages);

@@ -7,5 +7,5 @@ import java.util.ArrayList;
 public interface MessageService {
     Boolean setMessage(String content, Long teacherId, Long classId, String sort);
 
-    ArrayList<Message> getMessage(Long stuId, Long courseId, String sort);
+    ArrayList<Message> getMessage(Long stuId, Long courseId, String date, String sort);
 }

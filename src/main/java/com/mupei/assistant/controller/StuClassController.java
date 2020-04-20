@@ -28,7 +28,7 @@ public class StuClassController {
         Long count = stuClassService.getClassCount(courseId);
         boolean success = true;
         int code = 0;
-        String msg = "";
+        String msg = null;
         if(stuClass == null){
             success =false;
             code = -1;

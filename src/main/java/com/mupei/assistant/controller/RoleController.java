@@ -45,6 +45,9 @@ public class RoleController<V> {
         if(map == null) {
             return new Json(false);
         }
+        if(map.get("msg") != null) {
+            return new Json(false, map.get("msg").toString());
+        }
         return new Json(true, map);
     }
 

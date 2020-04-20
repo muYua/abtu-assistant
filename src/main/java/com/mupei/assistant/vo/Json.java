@@ -39,6 +39,11 @@ public class Json {
 		this.map = map;
 	}
 
+	public Json(boolean success, String msg) {
+		this.success = success;
+		this.msg = msg;
+	}
+
 	public Json(Integer code, ArrayList<?> data, Long count, String msg) {
 		this.code = code;
 		this.data = data;

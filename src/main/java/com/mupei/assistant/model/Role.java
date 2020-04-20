@@ -10,12 +10,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "email"}), @UniqueConstraint(columnNames = {"id", "phone"})})
 @Inheritance(strategy = InheritanceType.JOINED)
 @DynamicInsert//实现default赋值
 //@DynamicUpdate//BUG,2020.3.10
@@ -40,11 +39,11 @@ public class Role {
   @Column(length = 13)
   private String name;
   
-  @Column(length = 45, nullable = false)
+  @Column(length = 45, nullable = false, unique = true)
   private String email;
   
   //手机号码
-  @Column(length = 11)
+  @Column(length = 11, unique = true)
   private String phone;
   
   //头像

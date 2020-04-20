@@ -34,7 +34,7 @@ public class UploadFile {
 	private String filePath;
 
 	//根据路径生成,路径标识
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String md5;
 
 	// 文件类别，课堂文件、作业文件(教师下发、学生上传)、签到图片、头像

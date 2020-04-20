@@ -60,7 +60,12 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                             if (sessionStorage.getItem("selectedCourseName") !== null) {
                                 sessionStorage.removeItem("selectedCourseName");
                             }
-                            courseTimetable();
+                            if (sessionStorage.getItem("status") === null) {//初始化页面
+                                courseTimetable();
+                            } else {
+                                console.log("刷新当前页面。");
+                                flushCurrentStatus();//刷新当前页面
+                            }
                             return false;
                         }
                         let content = "";
@@ -86,9 +91,15 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                             console.log("初始化selectedCourseName", courseList[0]['courseName']);
                             sessionStorage.setItem("selectedCourseName", courseList[0]['courseName']);
                         }
+                    }
+                    if (sessionStorage.getItem("status") === null) {
+                        //初始化
+                        console.log("初始化页面，并记录状态status=checkSignIn");
                         courseTimetable();
-                    } else {
-                        console.log("课程信息获取失败！")
+                        sessionStorage.setItem("status", "checkSignIn");
+                    } else { //更新班级后刷新当前页面
+                        console.log("刷新当前页面。");
+                        flushCurrentStatus();
                     }
                 },
                 error: function (xhr, type, errorThrown) {
@@ -138,11 +149,14 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 case "showTeachingFiles" :
                     showTeachingFiles();
                     break;
-                case "usualPerformance" :
-                    usualPerformance();
+                case "signIn" :
+                    signIn();
                     break;
-                case "sendTeachingFiles" :
-                    sendTeachingFiles();
+                case "getHomework" :
+                    getHomework();
+                    break;
+                case "submitHomework" :
+                    submitHomework();
                     break;
                 case "usualPerformance" :
                     usualPerformance();
@@ -152,7 +166,6 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     break;
             }
         }
-
         /*--------------END 刷新当前页面---------------*/
 
         /*添加课程*/
@@ -170,7 +183,6 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 content: utils.getDomainName() + '/student_addCourse.html' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
         }
-
         /*--------------END 添加课程---------------*/
 
         /*删除课程*/
@@ -188,12 +200,11 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 content: utils.getDomainName() + '/student_deleteCourse.html'//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
         }
-
         /*--------------END 添加课程---------------*/
 
         /* 实时签到 */
-        $("#signIn").on("click", function () {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+        function signIn () {
+            $("#signIn").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
 
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
@@ -214,12 +225,16 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             `);
 
             element.render('breadcrumb');//重新进行对面包屑的渲染
+        }
+        $("#signIn").on("click", function () {
+            signIn();
+            sessionStorage.setItem("status", "signIn");
         });//end signIn.onclick
         /*--------------END 实时签到---------------*/
 
         /* 作业查看 */
-        $("#getHomework").on("click", function () {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+        function getHomework () {
+            $("#getHomework").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             //页面内容替换并填充
             const CONTENT_BODY_DIV = $("#contentBody");
             CONTENT_BODY_DIV.empty();
@@ -277,6 +292,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 data: {
                     stuId: stuId,
                     courseId: selectedCourse,
+                    date: utils.getFormatDate("yyyy-MM-dd"),
                     sort: 'h'
                 },
                 dataType: 'json',// 服务器返回json格式数据
@@ -419,12 +435,16 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 }// end obj.event==='del'
             });// end table.on.tool(submittedFiles)
 
+        }
+        $("#getHomework").on("click", function () {
+            getHomework();
+            sessionStorage.setItem("status", "getHomework");
         });//end getHomework.onclick
         /*--------------END 作业查看---------------*/
 
         /* 作业提交 */
-        $("#submitHomework").on("click", function () {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+        function submitHomework () {
+            $("#submitHomework").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse");
             //页面内容替换并填充
@@ -538,12 +558,16 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 }
             });//end upload.render
 
+        }
+        $("#submitHomework").on("click", function () {
+            submitHomework();
+            sessionStorage.setItem("status", "submitHomework");
         });//end submitHomework.onclick
         /*--------------END 作业提交---------------*/
 
         /*课堂文件*/
         function showTeachingFiles () {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            $("#showTeachingFiles").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse");
             //页面内容替换并填充
@@ -675,7 +699,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
 
         /*平时成绩*/
         function usualPerformance () {
-            $(this).addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
+            $("#usualPerformance").addClass("layui-this").siblings().removeClass("layui-this");//选中高亮
             let selectedCourseName = sessionStorage.getItem("selectedCourseName")
                 , selectedCourse = sessionStorage.getItem("selectedCourse");
             //页面内容替换并填充
@@ -701,7 +725,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     <span class="layui-breadcrumb">
                         <a><cite>学生主页</cite></a>
                         <a><cite>平时成绩</cite></a>
-                        <a><cite>${selectedCourse}</cite></a>
+                        <a><cite>${selectedCourseName}</cite></a>
                     </span>
                 </div>
                 <table class="layui-hide" id="usualPerformanceInfo" lay-filter="usualPerformanceInfo"></table>
@@ -827,6 +851,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 data: {
                     stuId: stuId,
                     courseId: selectedCourse,
+                    date: utils.getFormatDate("yyyy-MM-dd"),
                     sort: 'm'
                 },
                 dataType: 'json',// 服务器返回json格式数据

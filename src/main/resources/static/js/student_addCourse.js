@@ -80,13 +80,13 @@ require(['layui', 'utils'], function (layui, utils) {
                             if (json.success) {
                                 layer.msg("添加成功！", {time: 1000}, function () {
                                     sessionStorage.setItem("selectedCourse", COURSE_ID_VALUE);
-                                    sessionStorage.setItem("selectedCourseName", json['courseName']);
+                                    sessionStorage.setItem("selectedCourseName", json.map['courseName']);
                                     window.parent.location.reload();//修改成功后刷新父界面
                                     // window.location.reload();
                                 });
                             } else {
                                 let message = json['msg'];
-                                if (typeof message !== undefined && !utils.isEmpty(message))
+                                if (typeof message !== undefined && !utils.isEmpty(message) && message !== "")
                                     layer.msg(message);
                                 else
                                     layer.msg('添加失败！');
