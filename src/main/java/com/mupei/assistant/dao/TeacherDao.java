@@ -12,7 +12,6 @@ public interface TeacherDao extends CrudRepository<Teacher, Long>{
     @Transactional
     @Query("update Teacher t set "
             + "t.password = CASE WHEN :#{#teacher.activated} IS NULL THEN t.password ELSE :#{#teacher.password} END ,"
-            + "t.nickname = CASE WHEN :#{#teacher.nickname} IS NULL THEN t.nickname ELSE :#{#teacher.nickname} END ,"
             + "t.name = CASE WHEN :#{#teacher.name} IS NULL THEN t.name ELSE :#{#teacher.name} END ,"
             + "t.email = CASE WHEN :#{#teacher.email} IS NULL THEN t.email ELSE :#{#teacher.email} END ,"
             + "t.phone = CASE WHEN :#{#teacher.phone} IS NULL THEN t.phone ELSE :#{#teacher.phone} END ,"

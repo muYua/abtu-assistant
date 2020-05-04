@@ -21,7 +21,7 @@ import java.util.Set;
 @Setter
 @ToString
 @NoArgsConstructor
-@JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
+@JsonIgnoreProperties({"password", "email", "phone", "qq", "activated", "regTime", "loginTime", "loginIP"})//序列化时忽略的属性
 public class Teacher extends Role {
   //所属学校
   @Column(length = 55)

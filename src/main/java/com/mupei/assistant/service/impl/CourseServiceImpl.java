@@ -66,7 +66,7 @@ public class CourseServiceImpl implements CourseService {
         Optional<Role> optional = roleDao.findById(teacherId);
         String name;//教师姓名
         if(optional.isPresent()){
-            name = optional.get().getNickname();
+            name = optional.get().getName();
         } else {
             log.error("【course/getCourseByPage】教师信息不存在！");
             return null;
@@ -147,7 +147,7 @@ public class CourseServiceImpl implements CourseService {
         //student <-> course
         student_courseDao.findByStuId(stuId).forEach(student_course -> {
             Course course = student_course.getCourse();
-            String teacherName = Objects.requireNonNull(course).getTeacher().getNickname();
+            String teacherName = Objects.requireNonNull(course).getTeacher().getName();
             String className = stuClassDao.findByCourseIdAndStuId(course.getId(), stuId).getClassName();
             try {
                 //course => json => map

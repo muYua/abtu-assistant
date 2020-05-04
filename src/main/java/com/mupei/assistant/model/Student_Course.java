@@ -2,6 +2,7 @@ package com.mupei.assistant.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -23,8 +24,9 @@ public class Student_Course {
   @Column
   private Long id;
 
-//  @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
   @ManyToOne(targetEntity = Student.class)
+  @JsonIgnoreProperties({"password", "email", "phone", "qq", "activated", "regTime",
+          "loginTime", "loginIP", "department", "major", "enrollmentYear"})//序列化时忽略的属性
   @JoinColumn(name = "student_id", nullable = false)
   private Student student;
 
@@ -36,9 +38,9 @@ public class Student_Course {
   @Column(name = "signinfile_id")
   private Long signInFileId;
   
-  //平时成绩
-  @Column(length = 3)
-  private String usualPerformances;
+  //最终平时成绩
+  @Column
+  private Integer usualPerformances;
 
   public Student_Course(Student student, Course course) {
     this.student = student;

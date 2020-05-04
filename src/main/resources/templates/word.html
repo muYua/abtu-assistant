@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        /* CSS样式制作 */
+        *{padding:0px; margin:0px;}
+        a{ text-decoration:none; color:black;}
+        a:hover{text-decoration:none; color:#336699;}
+    </style>
+    <script type="text/javascript" src="pageoffice.js"></script>
+<!--    <script type="text/javascript" src="jquery.min.js"></script>-->
+</head>
+<body>
+<div style=" text-align:center; margin:10px; background-color:#D19275; color:White; padding:8px;"><h1>阿师课堂助手</h1></div>
+<div style="width:100%;height:1000px;" th:utext="${pageoffice}"></div>
+<script type="text/javascript">
+    function Save() {
+        if (document.getElementById("PageOfficeCtrl1").IsDirty) {
+            document.getElementById("PageOfficeCtrl1").WebSave();
+        } else {
+            alert("并未进行修改操作，无需保存。");
+        }
+    }
+    function PrintFile(){
+        document.getElementById("PageOfficeCtrl1").ShowDialog(4);
+
+    }
+    function IsFullScreen(){
+        document.getElementById("PageOfficeCtrl1").FullScreen = !document.getElementById("PageOfficeCtrl1").FullScreen;
+
+    }
+    function CloseFile(){
+        window.external.close();
+
+    }
+    function BeforeBrowserClosed() {
+        if (document.getElementById("PageOfficeCtrl1").IsDirty) {
+            if (confirm("提示：文档已被修改，请确认是否已保存！")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    function StartHandDraw() {
+        document.getElementById("PageOfficeCtrl1").HandDraw.Start();
+    }
+    //设置线宽
+    function SetPenWidth(){
+        document.getElementById("PageOfficeCtrl1").HandDraw.SetPenWidth(5);
+    }
+    //设置颜色
+    function SetPenColor() {
+
+        document.getElementById("PageOfficeCtrl1").HandDraw.SetPenColor(5292104);
+    }
+    //设置笔型
+    function SetPenType() {
+
+        document.getElementById("PageOfficeCtrl1").HandDraw.SetPenType(1);
+    }
+    //设置缩放
+    function SetPenZoom() {
+
+        document.getElementById("PageOfficeCtrl1").HandDraw.SetPenZoom(50);
+    }
+    //撤销最近一次手写
+    function UndoHandDraw() {
+
+        document.getElementById("PageOfficeCtrl1").HandDraw.Undo();
+    }
+    //退出手写
+    function ExitHandDraw() {
+
+        document.getElementById("PageOfficeCtrl1").HandDraw.Exit();
+    }
+</script>
+</body>
+</html>

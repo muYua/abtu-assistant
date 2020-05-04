@@ -50,7 +50,7 @@ require(['layui', 'utils'], function (layui, utils) {
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '班级ID'}
+                    {field: 'classId', title: '班级ID'}
                     , {field: 'className', title: '班级名称'}
                     , {field: 'teacherName', title: '任课教师'}
                     , {fixed: 'right', title: '操作', toolbar: '#addCourseRowBar', align: 'center'} //行工具栏
@@ -70,7 +70,7 @@ require(['layui', 'utils'], function (layui, utils) {
                         url: utils.getDomainName() + "/course/addCourseOfStudent",
                         data: {
                             courseId: COURSE_ID_VALUE,
-                            classId: data['id'],
+                            classId: data['classId'],
                             stuId: stuId
                         },
                         dataType: 'json',// 服务器返回json格式数据

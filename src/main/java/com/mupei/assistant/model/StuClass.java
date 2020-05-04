@@ -2,6 +2,7 @@ package com.mupei.assistant.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -20,6 +21,7 @@ public class StuClass {//非通俗意义上的班级，便于教师管理学生�
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
+	@JsonProperty("classId")
 	private Long id;
 
 	// 班级名称

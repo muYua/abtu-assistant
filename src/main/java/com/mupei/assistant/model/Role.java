@@ -3,6 +3,7 @@ package com.mupei.assistant.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -26,15 +27,12 @@ public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column
+  @JsonProperty("roleId")
   private Long id;
   
-  @Column(nullable = false)
+  @Column(length = 16, nullable = false)
   private String password;
-  
-  //昵称
-  @Column(length = 32, nullable = false)
-  private String nickname;
-  
+
   //姓名
   @Column(length = 13)
   private String name;

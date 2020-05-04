@@ -22,6 +22,7 @@ public class UploadFile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
+	@JsonProperty("fileId")
 	private Long id;
 
 	@Column(nullable = false)
@@ -30,10 +31,20 @@ public class UploadFile {
 	@Column(nullable = false)
 	private Long fileSize;
 
+	@JsonIgnore
 	@Column(nullable = false)
 	private String filePath;
 
+	//修改标志位
+	@Column(columnDefinition = "tinyint(1) not null default '0'")
+	private Boolean isUpdate;
+
+	//修改次数
+	@Column(columnDefinition = "int not null default '0'")
+	private Integer updateCount;
+
 	//根据路径生成,路径标识
+	@JsonIgnore
 	@Column(nullable = false, unique = true)
 	private String md5;
 
@@ -44,7 +55,7 @@ public class UploadFile {
 	@Column(length = 19, nullable = false)
 	private String createTime;
 
-	@JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
+	@JsonIgnoreProperties({"password", "email", "phone", "qq", "activated", "regTime", "loginIP", "loginTime"})//序列化时忽略的属性
 	@ManyToOne(targetEntity = Role.class)
 	@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
 	private Role role;

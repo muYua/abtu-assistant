@@ -12,7 +12,6 @@ public interface StudentDao extends CrudRepository<Student, Long> {
 	@Transactional
 	@Query("update Student stu set "
 			+ "stu.password = CASE WHEN :#{#student.activated} IS NULL THEN stu.password ELSE :#{#student.password} END ,"
-			+ "stu.nickname = CASE WHEN :#{#student.nickname} IS NULL THEN stu.nickname ELSE :#{#student.nickname} END ,"
 			+ "stu.name = CASE WHEN :#{#student.name} IS NULL THEN stu.name ELSE :#{#student.name} END ,"
 			+ "stu.email = CASE WHEN :#{#student.email} IS NULL THEN stu.email ELSE :#{#student.email} END ,"
 			+ "stu.phone = CASE WHEN :#{#student.phone} IS NULL THEN stu.phone ELSE :#{#student.phone} END ,"

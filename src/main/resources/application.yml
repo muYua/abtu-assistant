@@ -101,10 +101,11 @@ logging: #日志输出
 ##访问项目外部文件
 #静态资源对外暴露的访问路径
 file:
+  basePath: D:\ABTU-assistant
   staticAccessPath: /static/** #静态资源对外暴露的访问路径
   #文件上传目录（注意Linux和Windows上的目录结构不同）
   #file.uploadFolder=/root/uploadFiles/
-  uploadFolder: D:\ABTU-assistant\UploadFiles
+  uploadFolder: ${file.basePath}\UploadFiles\
 ##---------------------------------------------------  
 encryptUtil:
   tempSalt: abcdefghijklmnopqrstuvwxyz
@@ -119,3 +120,5 @@ timeUtil:
   dataFormat: yyyy-MM-dd HH:mm:ss
 #主域名
 domainName: http://127.0.0.1:8080
+pageoffice:
+  posyspath: ${file.basePath}\lic

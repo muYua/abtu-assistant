@@ -27,14 +27,15 @@ public class StuClass_Student {
     @JoinColumn(name = "stuclass_id", referencedColumnName = "id", nullable = false)
     private StuClass stuClass;
 
-    @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
     @ManyToOne(targetEntity = Student.class)
+    @JsonIgnoreProperties({"password", "email", "phone", "qq", "activated", "regTime",
+            "loginTime", "loginIP", "department", "major", "enrollmentYear"})//序列化时忽略的属性
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
     //学生的班级昵称
-    @Column(length = 13)
-    private String classNickname;
+//    @Column(length = 13)
+//    private String classNickname;
 
     public StuClass_Student(StuClass stuClass, Student student) {
         this.stuClass = stuClass;

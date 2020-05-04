@@ -17,8 +17,9 @@ import com.mupei.assistant.service.UploadFileService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +41,6 @@ UploadFileServiceImpl implements UploadFileService {
     @Autowired
     private StuClass_UploadFileDao stuClass_uploadFileDao;
     @Autowired
-    private StuClass_StudentDao stuClass_studentDao;
-    @Autowired
     private TimeUtil timeUtil;
     @Autowired
     private JsonUtil jsonUtil;
@@ -49,8 +48,8 @@ UploadFileServiceImpl implements UploadFileService {
     private EncryptUtil encryptUtil;
     @Value("${file.uploadFolder}")
     private String uploadFolder;
-    @Value("${domainName}")
-    private String DomainName;
+//    @Value("${domainName}")
+//    private String DomainName;
 
     @Override
     @Transactional
@@ -79,7 +78,7 @@ UploadFileServiceImpl implements UploadFileService {
                 default:
                     throw new IllegalStateException("Unexpected value: " + sort);
             }
-            String filePath = uploadFolder + File.separator + roleId + File.separator + sortName + File.separator +
+            String filePath = uploadFolder + roleId + File.separator + sortName + File.separator +
                     courseId + File.separator + classId; //存储上传文件的路径
             String currentTime = timeUtil.getCurrentTime();
             /*根据路径，文件名判重*/
@@ -152,19 +151,17 @@ UploadFileServiceImpl implements UploadFileService {
         for(UploadFile file : files) {
             //file<->roleId<->student => stuNumber
             String stuNumber = studentDao.findById(file.getId()).map(Student::getStuNumber).orElse(null);
-            //student<->class => classNickname
-            String classNickname = stuClass_studentDao.findByClassIdAndStuId(classId, file.getId())
-                    .map(StuClass_Student::getClassNickname).orElse(null);
+            String roleName = file.getRole().getName();
             //fileUrl
-            String fileUrl = DomainName + "/static/SignInFiles/" + courseId + "/" + classId + "/" +file.getFileName();
+//            String fileUrl = DomainName + "/static/" + file.getRole().getId() + "/SignInFiles/" + courseId + "/" + classId + "/" +file.getFileName();
             try { //存入数据(通过数据类型转换完成)
                 //file => json => map
                 @SuppressWarnings("unchecked")
                 HashMap<String, Object> map = jsonUtil.parse(jsonUtil.stringify(file), HashMap.class);
                 //map.put
                 map.put("stuNumber", stuNumber);
-				map.put("classNickname", classNickname);
-				map.put("fileUrl", fileUrl);
+				map.put("roleName", roleName);
+//				map.put("fileUrl", fileUrl);
                 //map => json => object => list.add(object)
                 list.add(jsonUtil.parse(jsonUtil.stringify(map), Object.class));
             } catch (IOException e) {
@@ -194,24 +191,22 @@ UploadFileServiceImpl implements UploadFileService {
         ArrayList<UploadFile> files = uploadFileDao.findUploadFiles(courseId, classId, date, sort, pageable);
         ArrayList<Object> list = new ArrayList<>();
         files.forEach(file -> {
-            String stuNumber , classNickname, roleName, sortName;
+            String stuNumber;
+            String roleName = file.getRole().getName();
             if ("hs".equals(sort)) {
-                sortName = "HomeworkFiles/student";
+//                sortName = "HomeworkFiles/student";
                 //file<-> roleId -> student => stuNumber
                 stuNumber = studentDao.findById(file.getRole().getId()).map(Student::getStuNumber).orElse(null);
-                //student<->class => classNickname
-                classNickname = stuClass_studentDao.findByClassIdAndStuId(classId, file.getId())
-                        .map(StuClass_Student::getClassNickname).orElse(null);
                 //fileUrl
-                String fileUrl = DomainName + "/static/" + sortName + "/" + courseId + "/" + classId + "/" +file.getFileName();
+//                String fileUrl = DomainName + "/static/" + file.getRole().getId() + "/" + sortName + "/" + courseId + "/" + classId + "/" +file.getFileName();
                 try { //存入数据(通过数据类型转换完成)
                     //file => json => map
                     //noinspection unchecked
                     HashMap<String, Object> map = jsonUtil.parse(jsonUtil.stringify(file), HashMap.class);
                     //map.put
                     map.put("stuNumber", stuNumber);
-                    map.put("classNickname", classNickname);
-                    map.put("fileUrl", fileUrl);
+                    map.put("roleName", roleName);
+//                    map.put("fileUrl", fileUrl);
                     //map => json => object => list.add(object)
                     list.add(jsonUtil.parse(jsonUtil.stringify(map), Object.class));
                 } catch (IOException e) {
@@ -219,18 +214,16 @@ UploadFileServiceImpl implements UploadFileService {
                     log.error("【uploadFile/getHomeworkFilesByDate】数据转换出错！");
                 }
             } else if ("ht".equals(sort)) {
-                sortName = "HomeworkFiles/teacher";
-                //file -> role => roleName
-                roleName = file.getRole().getNickname();
+//                sortName = "HomeworkFiles/teacher";
                 //fileUrl
-                String fileUrl = DomainName + "/static/" + sortName + "/" + courseId + "/" + classId + "/" +file.getFileName();
+//                String fileUrl = DomainName + "/static/" + file.getRole().getId() + "/" + sortName + "/" + courseId + "/" + classId + "/" +file.getFileName();
                 try { //存入数据(通过数据类型转换完成)
                     //file => json => map
                     @SuppressWarnings("unchecked")
                     HashMap<String, Object> map = jsonUtil.parse(jsonUtil.stringify(file), HashMap.class);
                     //map.put
                     map.put("roleName", roleName);
-                    map.put("fileUrl", fileUrl);
+//                    map.put("fileUrl", fileUrl);
                     //map => json => object => list.add(object)
                     list.add(jsonUtil.parse(jsonUtil.stringify(map), Object.class));
                 } catch (IOException e) {
@@ -251,16 +244,16 @@ UploadFileServiceImpl implements UploadFileService {
         ArrayList<Object> list = new ArrayList<>();
         for(UploadFile file : files) {
             //file<->roleId => roleName
-            String roleName = file.getRole().getNickname();
+            String roleName = file.getRole().getName();
             //fileUrl
-            String fileUrl = DomainName + "/static/TeachingFiles/" + courseId + "/" + classId + "/" +file.getFileName();
+//            String fileUrl = DomainName + "/static/" + file.getRole().getId() + "TeachingFiles/" + courseId + "/" + classId + "/" +file.getFileName();
             try { //存入数据(通过数据类型转换完成)
                 //file => json => map
                 //noinspection unchecked
                 HashMap<String, Object> map = jsonUtil.parse(jsonUtil.stringify(file), HashMap.class);
                 //map.put
                 map.put("roleName", roleName);
-                map.put("fileUrl", fileUrl);
+//                map.put("fileUrl", fileUrl);
                 //map => json => object => list.add(object)
                 list.add(jsonUtil.parse(jsonUtil.stringify(map), Object.class));
             } catch (IOException e) {
@@ -269,5 +262,82 @@ UploadFileServiceImpl implements UploadFileService {
             }
         }
         return list;
+    }
+
+    @Override
+    public Boolean downloadFile(HttpServletResponse response, Long fileId) {
+        Optional<UploadFile> fileOptional = uploadFileDao.findById(fileId);
+        String filePath, fileName;
+        if (fileOptional.isPresent()) {
+            UploadFile uploadFile = fileOptional.get();
+            fileName = uploadFile.getFileName();
+            filePath = uploadFile.getFilePath() + File.separator + fileName; //文件绝对路径
+            File file = new File(filePath);
+            // 如果文件存在，则进行下载
+            if (file.exists()) {
+                // 配置文件下载
+                response.setHeader("content-type", "application/octet-stream");
+                response.setContentType("application/octet-stream");
+                // 下载文件能正常显示中文
+                try {
+                    response.setHeader("Content-Disposition",
+                            "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    log.error("【uploadFile/downloadFile】编码不支持，导致文件下载失败！，文件Id：{}", fileId);
+                    return false;
+                }
+                // 实现文件下载
+                byte[] buffer = new byte[1024];
+                FileInputStream fis = null;
+                BufferedInputStream bis = null;
+                OutputStream os = null;
+                try {
+                    fis = new FileInputStream(file);
+                    bis = new BufferedInputStream(fis);
+                    os = response.getOutputStream();
+                    int i = bis.read(buffer);
+                    while (i != -1) {
+                        os.write(buffer, 0, i);
+                        os.flush();
+                        i = bis.read(buffer);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("【uploadFile/downloadFile】文件下载失败！，文件Id：{}", fileId);
+                    return false;
+                } finally {
+                    if (bis != null) {
+                        try {
+                            bis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            return true;
+        } else {
+            //已不存在该文件
+            return false;
+        }
+    }
+
+    @Override
+    public UploadFile findById(Long fileId) {
+        return uploadFileDao.findById(fileId).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public UploadFile save(UploadFile file) {
+        return uploadFileDao.save(file);
     }
 }

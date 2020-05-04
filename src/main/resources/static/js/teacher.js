@@ -74,7 +74,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                             /* 通过String.raw``获取``中的原字符串  */
                             content += String.raw`
                                 <dd>
-                                    <a id="course_${course['id']}" class="course" href="javascript:;">${course['courseName']}</a>
+                                    <a id="course_${course['courseId']}" class="course" href="javascript:;">${course['courseName']}</a>
                                 </dd>`;
                         });
                         $("#changeCourse").after(`
@@ -85,8 +85,8 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                         element.render('nav', 'headNav');//重新渲染导航栏
                         //初始化本地已选课程信息
                         if (sessionStorage.getItem("selectedCourse") === null) {
-                            console.log("初始化selectedCourse:" + courseList[0]['id']);
-                            sessionStorage.setItem("selectedCourse", courseList[0]['id']);
+                            console.log("初始化selectedCourse:" + courseList[0]['courseId']);
+                            sessionStorage.setItem("selectedCourse", courseList[0]['courseId']);
                         }
                         if (sessionStorage.getItem("selectedCourseName") === null) {
                             console.log("初始化selectedCourseName", courseList[0]['courseName']);
@@ -172,7 +172,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                             /* 通过String.raw``获取``中的原字符串  */
                             content += String.raw`
                             <dd>
-                                <a id="class_${clazz.id}" class="class" href="javascript:;">${clazz.className}</a>
+                                <a id="class_${clazz.classId}" class="class" href="javascript:;">${clazz.className}</a>
                             </dd>`;
                         });
                         $("#changeClass").after(`
@@ -183,8 +183,8 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                         element.render('nav', 'headNav');//重新渲染导航栏
                         //初始化已选班级信息
                         if (sessionStorage.getItem("selectedClass") === null) {
-                            console.log("初始化selectedClass" + classList[0]['id']);
-                            sessionStorage.setItem("selectedClass", classList[0]['id']);
+                            console.log("初始化selectedClass" + classList[0]['classId']);
+                            sessionStorage.setItem("selectedClass", classList[0]['classId']);
                         }
                         if (sessionStorage.getItem("selectedClassName") === null) {
                             console.log("初始化selectedClassName" + classList[0]['className']);
@@ -414,13 +414,13 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '文件ID'}
+                    {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
                     , {field: 'stuNumber', title: '学号', align: 'center'}
                     , {field: 'classNickname', title: '学生班级昵称', align: 'center'}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
-                    , {field: 'fileUrl', title: '文件路径', align: 'center', hide: true}
+                    // , {field: 'fileUrl', title: '文件路径', align: 'center', hide: true}
                     , {fixed: 'right', title: '操作', toolbar: '#signInRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: true
@@ -513,7 +513,6 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             element.render('breadcrumb');//重新进行对面包屑的渲染
 
             //多文件上传列表
-            let encryptRoleId = localStorage.getItem("id");
             let uploadListView = $('#uploadList')
                 , uploadListIns = upload.render({
                 elem: '#upload'
@@ -685,11 +684,11 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 , method: 'get'
                 , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '文件ID'}
+                    {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
                     , {field: 'stuNumber', title: '学号', align: 'center'}
-                    , {field: 'classNickname', title: '学生班级昵称', align: 'center'}
+                    , {field: 'name', title: '学生姓名', align: 'center'}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
                     , {fixed: 'right', title: '操作', toolbar: '#homeworkFilesRowBar', align: 'center'} //行工具栏
                 ]]
@@ -708,7 +707,11 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             table.on('tool(homeworkFiles)', function (obj) { //tool(lay-filter)
                 let data = obj.data;
                 if (obj.event === 'download') {
-                    window.open(data['fileUrl']);
+                    window.open(utils.getDomainName() + "/uploadFile/downloadFile/" + data['fileId']);
+                }// end obj.event==='download'
+                if (obj.event === 'open') {//在线打开
+                    // window.location.href = utils.getDomainName() + "/po/openWord"
+                    POBrowser.openWindowModeless(utils.getDomainName() + '/po/openWord/' + data['fileId']);
                 }// end obj.event==='download'
             });// end table.on.tool(homeworkFiles)
         }
@@ -775,7 +778,6 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             element.render('breadcrumb');//重新进行对面包屑的渲染
 
             //多文件上传列表
-            let encryptRoleId = localStorage.getItem("id");
             let uploadListView = $('#uploadList')
                 , uploadListIns = upload.render({
                 elem: '#upload'
@@ -896,9 +898,9 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 , method: 'get'
                 , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '学生ID'}
+                    {field: 'roleId', title: '学生ID'}
                     , {field: 'stuNumber', title: '学号'}
-                    , {field: 'stuName', title: '学生姓名'}
+                    , {field: 'name', title: '学生姓名'}
                     , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: true
@@ -908,24 +910,24 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }
                 , done: function (res, curr, count) {
                     // let myData = [];
-                    // let dataList = res.data;
-                    // let number;
-                    // myData[0] = {field: 'stuId', title: '学生ID'};
-                    // myData[1] = {field: 'stuNumber', title: '学号'};
-                    // myData[2] = {field: 'stuName', title: '学生姓名', align: 'center'};
-                    // $.each(dataList, function (i, data) {
-                    //     console.log(i+'次');
-                    //     //data.date -> i
-                    //     //数据 -> data.score
-                    //     myData[i] = {field: '' + data.score, title: '第' + i + '次'};
-                    //     number = i;
-                    // });
-                    // myData[number+1] = {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'};//行工具栏
-                    // table.init('userFilter', { //转换成静态表格
-                    //     cols: [myData]
-                    //     , data: res.data
-                    //     , limit: 10
-                    // });
+                    //                     // let dataList = res.data;
+                    //                     // let number;
+                    //                     // myData[0] = {field: 'stuId', title: '学生ID'};
+                    //                     // myData[1] = {field: 'stuNumber', title: '学号'};
+                    //                     // myData[2] = {field: 'stuName', title: '学生姓名', align: 'center'};
+                    //                     // $.each(dataList, function (i, data) {
+                    //                     //     console.log(i+'次');
+                    //                     //     //data.date -> i
+                    //                     //     //数据 -> data.score
+                    //                     //     myData[i] = {field: '' + data.score, title: '第' + i + '次'};
+                    //                     //     number = i;
+                    //                     // });
+                    //                     // myData[number+1] = {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'};//行工具栏
+                    //                     // table.init('userFilter', { //转换成静态表格
+                    //                     //     cols: [myData]
+                    //                     //     , data: res.data
+                    //                     //     , limit: 10
+                    //                     // });
                 }
             });//end render(usualPerformance)
             //监听行点击事件

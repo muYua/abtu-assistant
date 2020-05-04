@@ -24,6 +24,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
+    @JsonProperty("courseId")//序列化重命名
     private Long id;
 
     //课程名称
@@ -31,9 +32,9 @@ public class Course {
     private String courseName;
 
     //主讲教师
-//    @JsonProperty("teacherId")//序列化重命名
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")//只进行一次完整属性持久化，其余相同的实体用id替代
-//    @JsonIgnoreProperties({"password","email","phone","qq","activated","regTime"})//序列化时忽略的属性
+    @JsonIgnoreProperties({"password", "email", "phone", "qq", "activated", "regTime",
+            "loginTime", "loginIP", "education", "title"})//序列化时忽略的属性
     @ManyToOne(targetEntity = Teacher.class)
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;

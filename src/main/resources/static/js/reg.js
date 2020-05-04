@@ -32,21 +32,21 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
         }
 
         function reg() {
-            const NICKNAME_DOM = $("input[name='nickname']")
+            const NAME_DOM = $("input[name='name']")
                 , EMAIL_DOM = $("input[name='email']")
                 , PASSWORD_DOM = $("input[name='password']")
                 , SORT_DOM = $('input[type="radio"]:checked');
 
-            let nickname = NICKNAME_DOM.val().trim()
+            let name = NAME_DOM.val().trim()
                 , email = EMAIL_DOM.val().trim()
                 , password = PASSWORD_DOM.val().trim()
                 , sort = SORT_DOM.val()
                 , encryptedPassword = encrypt.encryptWithHashing(password, "MD5")
 
             //昵称
-            if (utils.isEmpty(nickname)) {
+            if (utils.isEmpty(name)) {
                 layerAnim6('昵称不能为空!');
-                NICKNAME_DOM.focus();
+                NAME_DOM.focus();
                 return false;
             }
 
@@ -79,7 +79,7 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
             $.ajax({
             	url: utils.getDomainName() + '/reg', 
                 data: {
-                    nickname: nickname,
+                    name: name,
                     email: email,
                     password: encryptedPassword,
                     sort: sort,

@@ -73,7 +73,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                             /* 通过String.raw``获取``中的原字符串  */
                             content += String.raw`
                                 <dd>
-                                    <a id="course_${course['id']}" class="course" href="javascript:;">${course['courseName']}</a>
+                                    <a id="course_${course['courseId']}" class="course" href="javascript:;">${course['courseName']}</a>
                                 </dd>`;
                         });
                         $("#changeCourse").after(`
@@ -84,8 +84,8 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                         element.render('nav', 'headNav');//重新渲染导航栏
                         //初始化本地已选课程信息
                         if (sessionStorage.getItem("selectedCourse") === null) {
-                            console.log("初始化selectedCourse:" + courseList[0]['id']);
-                            sessionStorage.setItem("selectedCourse", courseList[0]['id']);
+                            console.log("初始化selectedCourse:" + courseList[0]['courseId']);
+                            sessionStorage.setItem("selectedCourse", courseList[0]['courseId']);
                         }
                         if (sessionStorage.getItem("selectedCourseName") === null) {
                             console.log("初始化selectedCourseName", courseList[0]['courseName']);
@@ -339,7 +339,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '文件ID'}
+                    {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
                     , {
@@ -368,7 +368,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '文件ID'}
+                    {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
                     , {
@@ -398,20 +398,14 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             // 监听表格行工具栏时间
             table.on('tool(homeworkFiles)', function (obj) { //tool(lay-filter)
                 let data = obj.data;
-                console.log(data + '====^1');
                 if (obj.event === 'download') {
-
+                    window.open(utils.getDomainName() + "/uploadFile/downloadFile/" + data['fileId']);
                 }// end obj.event==='download'
             });// end table.on.tool(homeworkFiles)
             table.on('tool(submittedFiles)', function (obj) {
                 let data = $(obj.data);
-                console.log(data + '====^2');
                 if (obj.event === 'download') {
-//	            	 window.open(url="http://localhost:8080/assistant/static/"+data.fileName);
-                    const LINK = $(`<a href='${data['fileUrl']}' download='${data.fileName}'>download</a>`);
-                    $(document.body).append(LINK);
-                    $(LINK).click();
-                    $(LINK).remove();
+                    window.open(utils.getDomainName() + "/uploadFile/downloadFile/" + data['fileId']);
                 }// end obj.event==='download'
                 if (obj.event === 'del') {
                     $.ajax({
@@ -615,12 +609,12 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '文件ID'}
+                    {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
                     , {field: 'roleName', title: '创建人', align: 'center'}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
-                    , {field: 'fileUrl', title: '文件获取路径', hide: true}
+                    // , {field: 'fileUrl', title: '文件获取路径', hide: true}
                     , {fixed: 'right', title: '操作', toolbar: '#teachingFilesRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: false
@@ -634,14 +628,9 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 obj.tr.addClass("layui-table-click").siblings().removeClass("layui-table-click");
             });//end 监听行点击事件
             table.on('tool(teachingFiles)', function (obj) {
-                let data = $(obj.data);
-                console.log(data + '====^2');
+                let data = obj.data;
                 if (obj.event === 'download') {
-                    window.open(data['fileUrl']);
-//                    const LINK = $(`<a href='http://localhost:8080/assistant/static/${data.fileName}' download='${data.fileName}'>download</a>`);
-//                    $(document.body).append(LINK); 
-//                    $(LINK).click();
-//                    $(LINK).remove();
+                    window.open(utils.getDomainName() + "/uploadFile/downloadFile/" + data['fileId']);
                 }// end obj.event==='download'
             });//end table.on.tool(teachingFiles)
         }
@@ -678,7 +667,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 , method: 'get'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '课程ID'}
+                    {field: 'courseId', title: '课程ID'}
                     , {field: 'courseName', title: '课程名'}
                     , {field: 'teacherName', title: '任课教师'}
                     , {field: 'className', title: '所属班级'}
@@ -748,7 +737,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 , method: 'get'
                 , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'id', title: '学生ID'}
+                    {field: 'roleId', title: '学生ID'}
                     , {field: 'stuNumber', title: '学号'}
                     , {field: 'stuName', title: '学生姓名'}
                     , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏

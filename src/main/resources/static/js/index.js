@@ -13,7 +13,7 @@ require.config({
             deps: ['jquery'], //依赖的模块
             exports: 'layui'
         },
-        'background': ['jquery'],
+        'background': ['jquery']
     }
 });
 

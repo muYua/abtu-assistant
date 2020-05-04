@@ -18,7 +18,6 @@ public interface RoleDao extends CrudRepository<Role, Long> {
 	@Transactional
 	@Query("update Role r set "
 			+ "r.password = CASE WHEN :#{#role.password} IS NULL THEN r.password ELSE :#{#role.password} END ,"
-			+ "r.nickname = CASE WHEN :#{#role.nickname} IS NULL THEN r.nickname ELSE :#{#role.nickname} END ,"
 			+ "r.name = CASE WHEN :#{#role.name} IS NULL THEN r.name ELSE :#{#role.name} END ,"
 			+ "r.email = CASE WHEN :#{#role.email} IS NULL THEN r.email ELSE :#{#role.email} END ,"
 			+ "r.phone = CASE WHEN :#{#role.phone} IS NULL THEN r.phone ELSE :#{#role.phone} END ,"

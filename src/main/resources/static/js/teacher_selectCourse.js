@@ -28,7 +28,7 @@ require(['layui', 'utils'], function (layui, utils) {
             , method: 'get'
             , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , cols: [[
-                {field: 'id', title: '课程ID'}
+                {field: 'courseId', title: '课程ID'}
                 , {field: 'courseName', title: '课程名称'}
                 , {field: 'teacherName', title: '任课教师'}
                 , {fixed: 'right', title: '操作', toolbar: '#selectCourseRowBar', align: 'center', width: 165} //行工具栏
@@ -48,7 +48,7 @@ require(['layui', 'utils'], function (layui, utils) {
                 $.ajax({
                     url: utils.getDomainName() + "/course/deleteCourse",
                     data: {
-                        courseId: data['id']
+                        courseId: data['courseId']
                     },
                     dataType: 'json',// 服务器返回json格式数据
                     type: 'delete',
