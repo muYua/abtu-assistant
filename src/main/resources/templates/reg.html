@@ -101,11 +101,17 @@
     <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconyanjing" id="yanjing"></use>
     </svg>
+    <div class="layui-form-item" id="stuNumberDiv">
+        <label class="layui-form-label">学号</label>
+        <div class="layui-input-block">
+            <input type="text" name="stuNumber" autocomplete="off" placeholder="请输入学号" class="layui-input">
+        </div>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label">角色</label>
         <div class="layui-input-block">
-            <input type="radio" name="sort" value="t" title="我是老师">
-            <input type="radio" name="sort" value="s" title="我是学生" checked="checked">
+            <input type="radio" name="sort" value="t" lay-filter="sort" title="我是老师">
+            <input type="radio" name="sort" value="s" lay-filter="sort" title="我是学生" checked="checked">
         </div>
     </div>
     <div class="layui-form-item">

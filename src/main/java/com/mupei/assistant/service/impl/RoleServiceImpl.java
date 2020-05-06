@@ -15,7 +15,6 @@ import com.mupei.assistant.utils.VerifyCodeUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Optional;
@@ -94,7 +93,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public Boolean reg(Role role, String currentTime, String ip) {
+	public Boolean reg(Role role, String currentTime, String ip, String stuNumber) {
 		String email = role.getEmail();
 		//判重
 		Optional<Role> optional = roleDao.findByEmail(email);
@@ -130,9 +129,13 @@ public class RoleServiceImpl implements RoleService {
 		log.debug("【reg】{} IP：{}", email, ip);
 		//发送激活链接
 		try {
-			sendLinkUtil.sendLink(role.getEmail());
+			if ("s".equals(role.getSort())) {
+				sendLinkUtil.sendLink(role.getEmail(), stuNumber);
+			} else{
+				sendLinkUtil.sendLink(role.getEmail());
+			}
 			log.debug("【reg】{}激活链接已发送。", email);
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -141,7 +144,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public Boolean activateReg(String encryptedEmail, String encryptedVerifyCode, String currentTime, String ipAddr) {
+	public Boolean activateReg(String encryptedEmail, String encryptedVerifyCode, String currentTime, String ipAddr, String stuNumber) {
 		//验证数据合法性
 		if (encryptedEmail == null || "".equals(encryptedEmail))
 			return false;
@@ -177,7 +180,7 @@ public class RoleServiceImpl implements RoleService {
 					//使用原生SQL语句插入，否则使用save()方法插入的实体属性的父类属性需要满足其父类表字段的约束条件（非空）
 					teacherDao.save(new Teacher(), role.getId());
 				} else if("s".equals(role.getSort())){
-					studentDao.save(new Student(), role.getId());
+					studentDao.save(new Student(stuNumber), role.getId());
 				}
 			}
 			log.debug("【activateReg】{}账号激活时间：{}", email, currentTime);

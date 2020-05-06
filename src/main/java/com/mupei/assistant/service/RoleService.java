@@ -8,9 +8,9 @@ public interface RoleService {
 
 	HashMap<String, Object> loginCheck(String roleNumber, String password, String flag, String currentTime, String ipAddr);
 
-	Boolean reg(Role role, String currentTime, String ipAddr);
+	Boolean reg(Role role, String currentTime, String ipAddr, String stuNumber);
 
-	Boolean activateReg(String encryptedEmail, String encryptedVerifyCode, String currentTime, String ipAddr);
+	Boolean activateReg(String encryptedEmail, String encryptedVerifyCode, String currentTime, String ipAddr, String stuNumber);
 
 	Boolean getResetPasswordVerifyCode(String email, String currentTime, String ipAddr);
 

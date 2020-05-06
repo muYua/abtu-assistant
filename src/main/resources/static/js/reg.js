@@ -31,17 +31,28 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
             })
         }
 
+        form.on("radio(sort)", function (data) {
+            let val = data.value;
+            if(val === "t"){
+                $("#stuNumberDiv").hide();
+            } else if(val === "s") {
+                $("#stuNumberDiv").show();
+            }
+        });
+
         function reg() {
             const NAME_DOM = $("input[name='name']")
                 , EMAIL_DOM = $("input[name='email']")
                 , PASSWORD_DOM = $("input[name='password']")
+                , STU_NUMBER_DOM = $("input[name='stuNumber']")
                 , SORT_DOM = $('input[type="radio"]:checked');
 
             let name = NAME_DOM.val().trim()
                 , email = EMAIL_DOM.val().trim()
                 , password = PASSWORD_DOM.val().trim()
                 , sort = SORT_DOM.val()
-                , encryptedPassword = encrypt.encryptWithHashing(password, "MD5")
+                , stuNumber = STU_NUMBER_DOM.val()
+                , encryptedPassword = encrypt.encryptWithHashing(password, "MD5");
 
             //昵称
             if (utils.isEmpty(name)) {
@@ -75,15 +86,32 @@ require(['jquery', 'layui', 'utils', 'encrypt', 'zxcvbn', 'background', 'iconfon
                 PASSWORD_DOM.focus();
                 return false;
             }
-            
+
+            if(sort === "s"){
+                if (utils.isEmpty(stuNumber)) {
+                    layerAnim6('学号不能为空!');
+                    PASSWORD_DOM.focus();
+                    return false;
+                }
+            }
+
+            let data = {
+                name: name,
+                email: email,
+                password: encryptedPassword,
+                stuNumber: stuNumber,
+                sort: sort
+            };
+
+            if (sort === "t") {
+                delete data.stuNumber;
+            } else if (sort === "s") {
+                data[stuNumber] = stuNumber;
+            }
+
             $.ajax({
             	url: utils.getDomainName() + '/reg', 
-                data: {
-                    name: name,
-                    email: email,
-                    password: encryptedPassword,
-                    sort: sort,
-                },
+                data: data,
                 dataType: 'json',//服务器返回json格式数据
                 type: 'post',//HTTP请求类型
                 timeout: 10000,//超时时间设置为10秒

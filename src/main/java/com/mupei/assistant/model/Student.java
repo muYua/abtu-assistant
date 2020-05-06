@@ -47,4 +47,9 @@ public class Student extends Role {
   @JsonIgnore
   @OneToMany(targetEntity = UsualPerformance.class, mappedBy = "student")
   private Set<UsualPerformance> usualPerformances = new HashSet<>();
+
+  public Student(String stuNumber) {
+    this.stuNumber = stuNumber;
+  }
+
 }

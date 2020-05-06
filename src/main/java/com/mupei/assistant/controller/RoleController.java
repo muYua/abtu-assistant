@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-public class RoleController<V> {
+public class RoleController {
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -36,7 +36,7 @@ public class RoleController<V> {
      * @param request
      * @return map(roleId,roleSort)
      */
-    @PostMapping({"/login"})
+    @PostMapping("/login")
     public Json login(@RequestParam String roleNumber, @RequestParam String password, @RequestParam String flag,
                       HttpServletRequest request) {
         String currentTime = timeUtil.getCurrentTime();
@@ -58,11 +58,12 @@ public class RoleController<V> {
      * @param request
      * @return
      */
-    @PostMapping({"/reg"})
-    public Json reg(Role role, HttpServletRequest request) {
+    @PostMapping("/reg")
+    public Json reg(Role role, @RequestParam(required = false) String stuNumber, HttpServletRequest request) {
         String currentTime = timeUtil.getCurrentTime();
         String ipAddr = ipAddressUtil.getIpAddr(request);
-        Boolean reg = roleService.reg(role, currentTime, ipAddr);
+        Boolean reg;
+        reg = roleService.reg(role, currentTime, ipAddr, stuNumber);
         return new Json(reg);
     }
 
@@ -74,12 +75,12 @@ public class RoleController<V> {
      * @param request
      * @return
      */
-    @RequestMapping({"/activateRegVerifyCode"})
+    @RequestMapping("/activateRegVerifyCode")
     public Json activateVerifyCode(@RequestParam String encryptedEmail, @RequestParam String encryptedVerifyCode,
-                                   HttpServletRequest request) {
+                                   HttpServletRequest request, @RequestParam(required = false) String stuNumber) {
         String currentTime = timeUtil.getCurrentTime();
         String ipAddr = ipAddressUtil.getIpAddr(request);
-        Boolean activateReg = roleService.activateReg(encryptedEmail, encryptedVerifyCode, currentTime, ipAddr);
+        Boolean activateReg = roleService.activateReg(encryptedEmail, encryptedVerifyCode, currentTime, ipAddr, stuNumber);
         return new Json(activateReg);
     }
 
@@ -90,7 +91,7 @@ public class RoleController<V> {
      * @param request
      * @return
      */
-    @GetMapping({"/getResetPasswordVerifyCode"})
+    @GetMapping("/getResetPasswordVerifyCode")
     public Json getResetPasswordVerifyCode(@RequestParam String email, HttpServletRequest request) {
         String currentTime = timeUtil.getCurrentTime();
         String ipAddr = ipAddressUtil.getIpAddr(request);
@@ -105,7 +106,7 @@ public class RoleController<V> {
      * @param verifyCode 验证码
      * @return
      */
-    @PostMapping({"/checkResetPasswordVerifyCode"})
+    @PostMapping("/checkResetPasswordVerifyCode")
     public Json checkResetPasswordVerifyCode(@RequestParam String email, @RequestParam String verifyCode) {
         Boolean flag = roleService.checkResetPasswordVerifyCode(email, verifyCode);
         return new Json(flag);
@@ -119,7 +120,7 @@ public class RoleController<V> {
      * @param request
      * @return
      */
-    @PutMapping({"/resetPassword"})
+    @PutMapping("/resetPassword")
     public Json resetPassword(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
         String currentTime = timeUtil.getCurrentTime();
         String ipAddr = ipAddressUtil.getIpAddr(request);

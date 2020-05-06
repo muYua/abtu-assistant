@@ -29,7 +29,7 @@ public class SendLinkUtil {
 
 	/* 生成注册激活链接 */
 	private String generateLink(String email, String verifyCode, String algorithm)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+			throws NoSuchAlgorithmException{
 		String KEY = encryptUtil.getKeyOfAES();
 		String VI = encryptUtil.getViReg();
 		String encryptedEmail = encryptUtil.encryptWithAES(email, KEY, VI);
@@ -41,10 +41,29 @@ public class SendLinkUtil {
 		return message;
 	}
 
+	private String generateLink(String email, String stuNumber, String verifyCode, String algorithm) throws NoSuchAlgorithmException {
+		String KEY = encryptUtil.getKeyOfAES();
+		String VI = encryptUtil.getViReg();
+		String encryptedEmail = encryptUtil.encryptWithAES(email, KEY, VI);
+		String encryptedVerifyCode = encryptUtil.encryptWithSHA(verifyCode, algorithm);
+		String url = website + "/activateRegVerifyCode?" + "&encryptedEmail=" + replaceUrl(encryptedEmail)
+				+ "&encryptedVerifyCode=" + replaceUrl(encryptedVerifyCode)
+				+ "&stuNumber=" + stuNumber;
+		String message = "【阿师课堂助手】请点击该链接来进行账号激活：<a href='" + url + "' target='_blank'>" + url + "</a>"
+				+ "<p>注：该链接将在10分钟后失效。如果无法打开该链接，请复制到浏览器打开。</p>";
+		return message;
+	}
+
 	/* 发送注册激活链接 */
-	public void sendLink(String email) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public void sendLink(String email) throws NoSuchAlgorithmException {
 		String verifyCode = verifyCodeUtil.getVerifyCode(6);
 		redisUtil.set("verifyCode" + email, verifyCode, Long.valueOf(10L), TimeUnit.MINUTES);
 		emailUtil.sendHtmlMail(email, "激活邮箱账号", generateLink(email, verifyCode, "SHA-256"));
 	}
+	public void sendLink(String email, String stuNumber) throws NoSuchAlgorithmException {
+		String verifyCode = verifyCodeUtil.getVerifyCode(6);
+		redisUtil.set("verifyCode" + email, verifyCode, Long.valueOf(10L), TimeUnit.MINUTES);
+		emailUtil.sendHtmlMail(email, "激活邮箱账号", generateLink(email, stuNumber, verifyCode, "SHA-256"));
+	}
+
 }
