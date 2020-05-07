@@ -1,5 +1,6 @@
 package com.mupei.assistant.dao;
 
+import com.mupei.assistant.model.StudentInfo;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -36,4 +37,7 @@ public interface StudentDao extends CrudRepository<Student, Long> {
 			" VALUES (:#{#student.department}, :#{#student.enrollmentYear}, :#{#student.major}, :#{#student.school}, :#{#student.stuNumber}, :roleId)"
 			, nativeQuery = true)
 	Integer save(Student student, Long roleId);
+
+	@Query(value = "SELECT s FROM Student s WHERE s.id = ?1")
+	StudentInfo findStudentInfoById(Long roleId);
 }

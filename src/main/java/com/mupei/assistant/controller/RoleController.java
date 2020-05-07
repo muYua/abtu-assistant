@@ -1,6 +1,8 @@
 package com.mupei.assistant.controller;
 
 import com.mupei.assistant.model.Role;
+import com.mupei.assistant.model.RoleInfo;
+import com.mupei.assistant.model.Student;
 import com.mupei.assistant.service.RoleService;
 import com.mupei.assistant.utils.IpAddressUtil;
 import com.mupei.assistant.utils.TimeUtil;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 @RestController
 public class RoleController {
@@ -126,5 +129,11 @@ public class RoleController {
         String ipAddr = ipAddressUtil.getIpAddr(request);
         Boolean resetPassword = roleService.resetPassword(email, password, currentTime, ipAddr);
         return new Json(resetPassword);
+    }
+
+    @GetMapping("/getRoleInfo")
+    public Json getStudentInfo(@RequestParam Long roleId) {
+        RoleInfo role = roleService.getRoleInfo(roleId);
+        return new Json(role != null, role);
     }
 }

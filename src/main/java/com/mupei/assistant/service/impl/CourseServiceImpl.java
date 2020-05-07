@@ -11,8 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.mupei.assistant.service.CourseService;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,6 +100,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void deleteCourse(Long courseId) {
+        student_courseDao.deleteByCourseId(courseId);
         courseDao.deleteById(courseId);
         log.debug("【course/deleteCourse】删除课程，课程ID：{}", courseId);
     }
@@ -165,5 +166,13 @@ public class CourseServiceImpl implements CourseService {
             }
         });
         return courses;
+    }
+
+    @Override
+    @Transactional
+    public void deleteCourseOfStudent(Long stuId, Long courseId) {
+        stuClass_studentDao.deleteByStuId(stuId);
+        student_courseDao.deleteByStuIdAndCourseId(stuId,courseId);
+        log.debug("【course/deleteCourseOfStudent】删除选课，stuId:{}, 课程ID：{}", stuId, courseId);
     }
 }

@@ -51,8 +51,10 @@ require(['layui', 'utils'], function (layui, utils) {
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     {field: 'classId', title: '班级ID'}
+                    , {field: 'courseName', title: '课程名称'}
                     , {field: 'className', title: '班级名称'}
-                    , {field: 'teacherName', title: '任课教师'}
+                    , {field: 'teacherName', title: '任课教师'
+                        , templet: function (data) {return data['course']['teacher']['name'];}}
                     , {fixed: 'right', title: '操作', toolbar: '#addCourseRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: true

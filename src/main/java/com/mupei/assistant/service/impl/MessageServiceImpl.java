@@ -23,8 +23,6 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private TeacherDao teacherDao;
     @Autowired
-    private StuClass_StudentDao stuClass_studentDao;
-    @Autowired
     private StuClass_MessageDao stuClass_messageDao;
     @Autowired
     private TimeUtil timeUtil;
@@ -46,29 +44,15 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public ArrayList<Message> getMessage(Long stuId, Long courseId, String date, String sort) {
-        ArrayList<StuClass_Student> stuClass_students = stuClass_studentDao.findByStuId(stuId);
-        if(stuClass_students != null && stuClass_students.size() != 0){
-            //student <-> stuClass => stuClass
-            for (StuClass_Student stuClass_student : stuClass_students) {
-                StuClass stuClass = stuClass_student.getStuClass();
-                Course course = stuClass.getCourse();
-                if (Objects.equals(course.getId(), courseId)){ //找到对应course的stuClass
-                    ArrayList<Message> messages = new ArrayList<>();
-                    //course => stuClass <-> message => message
-                    stuClass_messageDao.findByClassId(courseId).forEach(stuClass_message -> {
-                        Message message = stuClass_message.getMessage();
-                        if (Objects.equals(message.getSort(), sort) && date.equals(message.getCreateTime().substring(0, 10))) {
-                            messages.add(message);
-                        }
-                    });
-                    log.debug("【message/getMessage】找到对应课程的消息{}，消息内容：{}，课程ID：{}，学生ID：{}", sort, messages, courseId, stuId);
-                    return  messages;
-                }
+        ArrayList<Message> messages = new ArrayList<>();
+        StuClass stuClass = stuClassDao.findByCourseIdAndStuId(courseId, stuId);
+        stuClass_messageDao.findByClassId(stuClass.getId()).forEach(stuClass_message -> {
+            Message message = stuClass_message.getMessage();
+            if (Objects.equals(message.getSort(), sort) && date.equals(message.getCreateTime().substring(0, 10))) {
+                messages.add(message);
             }
-        } else {
-            log.error("【message/getMessage】class <-> student关系不存在，学生ID：{}", stuId);
-            return null;
-        }
-        return null;
+        });
+        log.debug("【message/getMessage】找到对应课程的消息{}，消息内容：{}，课程ID：{}，学生ID：{}", sort, messages, courseId, stuId);
+        return  messages;
     }
 }

@@ -30,7 +30,7 @@ public class Role {
   @JsonProperty("roleId")
   private Long id;
   
-  @Column(length = 16, nullable = false)
+  @Column(nullable = false)
   private String password;
 
   //姓名
@@ -70,11 +70,11 @@ public class Role {
 
   @ToString.Exclude
   @JsonIgnore
-  @OneToMany(targetEntity = Message.class, mappedBy = "role")
+  @OneToMany(targetEntity = Message.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "role")
   private Set<Message> messages = new HashSet<>();
 
   @ToString.Exclude
   @JsonIgnore
-  @OneToMany(targetEntity = UploadFile.class, mappedBy = "role")
+  @OneToMany(targetEntity = UploadFile.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "role")
   private Set<UploadFile> uploadFiles = new HashSet<>();
 }

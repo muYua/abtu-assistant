@@ -45,7 +45,7 @@ public class Student extends Role {
 
   @ToString.Exclude
   @JsonIgnore
-  @OneToMany(targetEntity = UsualPerformance.class, mappedBy = "student")
+  @OneToMany(targetEntity = UsualPerformance.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
   private Set<UsualPerformance> usualPerformances = new HashSet<>();
 
   public Student(String stuNumber) {

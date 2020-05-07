@@ -3,6 +3,7 @@ package com.mupei.assistant.dao;
 import com.mupei.assistant.model.Role;
 import java.util.Optional;
 
+import com.mupei.assistant.model.RoleInfo;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -34,4 +35,7 @@ public interface RoleDao extends CrudRepository<Role, Long> {
 	Role findByEmailAndPassword(String roleNumber, String encrypted);
 
 	Role findByPhoneAndPassword(String roleNumber, String encrypted);
+
+	@Query(value = "SELECT r FROM Role r WHERE r.id = ?1")
+	RoleInfo findRoleInfoById(Long roleId);
 }

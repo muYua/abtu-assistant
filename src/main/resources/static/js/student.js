@@ -197,7 +197,7 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 resize: false, //是否允许拉伸
                 move: false,  //禁止拖拽
                 title: '删除课程',
-                content: utils.getDomainName() + '/student_deleteCourse.html'//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: utils.getDomainName() + '/student_delCourse.html'//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
         }
         /*--------------END 添加课程---------------*/
@@ -342,12 +342,8 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {
-                        field: 'role', title: '创建人', align: 'center'
-                        , templet: function (d) {
-                            return d.role['nickname'];
-                        }
-                    }
+                    , {field: 'roleName', title: '创建人', align: 'center'
+                        , templet: function (d) {return d.role['name'];}}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
                     , {fixed: 'right', title: '操作', toolbar: '#homeworkFilesRowBar', align: 'center'} //行工具栏
                 ]]
@@ -371,14 +367,9 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {
-                        field: 'role', title: '创建人', align: 'center'
-                        , templet: function (d) {
-                            return d.role['nickname'];
-                        }
-                    }
+                    , {field: 'roleName', title: '创建人', align: 'center'}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
-                    , {fixed: 'right', title: '操作', toolbar: '#submittedFilesRowBar', align: 'center'} //行工具栏
+                    , {fixed: 'right', title: '操作', width: 130, toolbar: '#submittedFilesRowBar', align: 'center'} //行工具栏
                 ]]
                 , request: {
                     pageName: 'pageNo' //页码的参数名称，默认：page
@@ -403,16 +394,16 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 }// end obj.event==='download'
             });// end table.on.tool(homeworkFiles)
             table.on('tool(submittedFiles)', function (obj) {
-                let data = $(obj.data);
+                let data = obj.data;
                 if (obj.event === 'download') {
                     window.open(utils.getDomainName() + "/uploadFile/downloadFile/" + data['fileId']);
                 }// end obj.event==='download'
                 if (obj.event === 'del') {
                     $.ajax({
-                        url: "/assistant/student/delFile",
+                        url: utils.getDomainName() + "/uploadFile/delFile/" + data['fileId'],
                         data: {},
                         dataType: 'json',// 服务器返回json格式数据
-                        type: 'get',// HTTP请求类型
+                        type: 'delete',// HTTP请求类型
                         timeout: 10000,// 超时时间设置为10秒
                         success: function (data) {
                             if (data.success) {
@@ -741,6 +732,8 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     , {field: 'stuNumber', title: '学号'}
                     , {field: 'stuName', title: '学生姓名'}
                     , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏
+                    // , {field: 'roleName', title: '创建人', align: 'center'
+                    //     , templet: function (d) {return d.role['name'];}}
                 ]]
                 , page: true
                 , request: {
@@ -886,5 +879,22 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
             window.location.href = "index.html";
         });
         /*--------------END 注销---------------*/
+
+        /* 学生信息 */
+        $("#studentInfo").on("click", function () {
+            layer.open({
+                type: 2, //iframe层
+                area: ['700px', '510px'], //宽高
+                fixed: true, //固定
+                maxmin: false, //最大小化
+                closeBtn: 1, //右上关闭
+                shadeClose: false, //点击遮罩关闭
+                resize: false, //是否允许拉伸
+                move: false,  //禁止拖拽
+                title: '学生信息',
+                content: utils.getDomainName() + '/studentInfo.html'//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+            });
+        });
+        /*--------------END 学生信息---------------*/
     });//end layui
 });//end require

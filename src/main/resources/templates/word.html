@@ -37,7 +37,7 @@
     }
     function BeforeBrowserClosed() {
         if (document.getElementById("PageOfficeCtrl1").IsDirty) {
-            if (confirm("提示：文档已被修改，请确认是否已保存！")) {
+            if (confirm("提示：文档已被修改，请确认是否已保存！\n退出不会自动保存，是否仍要退出？")) {
                 return true;
             } else {
                 return false;

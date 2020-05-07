@@ -41,12 +41,12 @@ public class Course {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(targetEntity = StuClass.class, mappedBy = "course")
+    @OneToMany(targetEntity = StuClass.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")//通过级联，删除班级
     private Set<StuClass> stuClasses = new HashSet<>();
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(targetEntity = UsualPerformance.class, mappedBy = "course")
+    @OneToMany(targetEntity = UsualPerformance.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
     private Set<UsualPerformance> usualPerformances = new HashSet<>();
 
     public Course(String courseName, Teacher teacher) {

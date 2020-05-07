@@ -72,4 +72,9 @@ public class UploadFileController {
         uploadFileService.downloadFile(response, fileId);
     }
 
+    @DeleteMapping(value = "/delFile/{fileId}")
+    public Json delFile(@PathVariable Long fileId) {
+        uploadFileService.delFile(fileId);
+        return new Json(true);
+    }
 }

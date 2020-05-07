@@ -1,7 +1,9 @@
 package com.mupei.assistant.service.impl;
 
 import com.mupei.assistant.dao.StuClass_StudentDao;
+import com.mupei.assistant.dao.StudentDao;
 import com.mupei.assistant.model.Student;
+import com.mupei.assistant.model.StudentInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StuClass_StudentDao stuClass_studentDao;
+    @Autowired
+    private StudentDao studentDao;
 
     @Override
     public ArrayList<Student> getStudentInfos(Long classId) {
@@ -21,5 +25,10 @@ public class StudentServiceImpl implements StudentService {
             students.add(stuClass_student.getStudent());
         });
         return students;
+    }
+
+    @Override
+    public StudentInfo getStudentInfo(Long stuId) {
+        return studentDao.findStudentInfoById(stuId);
     }
 }

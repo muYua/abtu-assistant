@@ -340,4 +340,12 @@ UploadFileServiceImpl implements UploadFileService {
     public UploadFile save(UploadFile file) {
         return uploadFileDao.save(file);
     }
+
+    @Override
+    @Transactional
+    public void delFile(Long fileId) {
+        stuClass_uploadFileDao.deleteByFileId(fileId);
+        uploadFileDao.deleteById(fileId);
+        //删除物理文件
+    }
 }

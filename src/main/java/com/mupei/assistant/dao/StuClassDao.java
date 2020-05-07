@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -19,9 +20,6 @@ public interface StuClassDao extends CrudRepository<StuClass, Long> {
 
 	@Query("SELECT COUNT(c.id) FROM StuClass c WHERE c.course.id = ?1")
 	Long countByCourseId(Long courseId, Sort sort);
-
-	@Query("DELETE FROM StuClass c WHERE c.course.id = ?1")
-    void deleteByCourseId(Long courseId);
 
 	@Query("SELECT c FROM StuClass c WHERE c.course.id = ?1 AND c.id IN" +
 			" (SELECT cs.stuClass.id FROM StuClass_Student cs WHERE cs.student.id = ?2)")

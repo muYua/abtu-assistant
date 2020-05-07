@@ -66,7 +66,6 @@ public class PageOfficeController {
         poCtrl.setSaveFilePage("/po/save/" + fileId);//设置保存的action
         UploadFile file = uploadFileService.findById(fileId);
         String filePath = file.getFilePath() + File.separator + file.getFileName();
-        System.out.println(filePath+"-----------------------");
         poCtrl.webOpen(filePath, OpenModeType.docAdmin, "张三");
         map.put("pageoffice", poCtrl.getHtmlCode("PageOfficeCtrl1"));
         return new ModelAndView("word");

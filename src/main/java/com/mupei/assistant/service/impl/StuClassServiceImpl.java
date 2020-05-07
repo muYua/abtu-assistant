@@ -3,6 +3,8 @@ package com.mupei.assistant.service.impl;
 import com.mupei.assistant.dao.*;
 import com.mupei.assistant.model.Course;
 import com.mupei.assistant.model.StuClass;
+import com.mupei.assistant.model.StuClass_Message;
+import com.mupei.assistant.model.StuClass_UploadFile;
 import com.mupei.assistant.service.StuClassService;
 import com.mupei.assistant.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +26,18 @@ public class StuClassServiceImpl implements StuClassService {
     @Autowired
     private StuClassDao stuClassDao;
     @Autowired
+    private StuClass_StudentDao stuClass_studentDao;
+    @Autowired
+    private StuClass_UploadFileDao stuClass_uploadFileDao;
+    @Autowired
+    private StuClass_MessageDao stuClass_messageDao;
+    @Autowired
     private CourseDao courseDao;
     @Autowired
     private JsonUtil jsonUtil;
+
+    public StuClassServiceImpl() {
+    }
 
     @Override
     public ArrayList<StuClass> getClassList(Long courseId) {
@@ -97,6 +108,9 @@ public class StuClassServiceImpl implements StuClassService {
     @Override
     @Transactional
     public void deleteClass(Long classId) {
+        stuClass_messageDao.deleteByClassId(classId);
+        stuClass_studentDao.deleteByClassId(classId);
+        stuClass_uploadFileDao.deleteByClassId(classId);
         stuClassDao.deleteById(classId);
         log.debug("【stuClass/deleteClass】删除班级，班级ID：{}", classId);
     }

@@ -20,14 +20,7 @@ public class UsualPerformanceController {
     @GetMapping("/getUsualPerformances")
     public Json getUsualPerformances(@RequestParam Long courseId, @RequestParam Long stuId) {
         ArrayList<UsualPerformance> list = usualPerformanceService.getUsualPerformances(courseId, stuId);
-        boolean success = true;
-        int code = 0;
-        String msg = null;
-        if (list == null) {
-            success = false;
-            code = -1;
-            msg = "获取平时成绩数据失败！";
-        }
-        return new Json(success, code, list, 0L, msg);
+        boolean success = list != null;
+        return new Json(success, success?0:-1, list, 0L, success?null:"获取平时成绩数据失败!");
     }
 }

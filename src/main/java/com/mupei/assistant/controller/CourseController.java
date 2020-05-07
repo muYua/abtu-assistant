@@ -32,29 +32,15 @@ public class CourseController {
                                 @RequestParam Integer pageSize) {
         ArrayList<Object> course = courseService.getCourseByPage(teacherId, pageNo, pageSize);
         Long count = courseService.getCourseCount(teacherId);
-        boolean success = true;
-        int code = 0;
-        String msg = null;
-        if (course == null) {
-            success = false;
-            code = -1;
-            msg = "获取课程数据失败！";
-        }
-        return new Json(success, code, course, count, msg);
+        boolean success = course !=null;
+        return new Json(success, success?0:-1, course, count, success?null:"获取课程数据失败!");
     }
 
     @GetMapping("/getCourseInfoOfStudent")
     public Json getCourseInfoOfStudent(@RequestParam Long stuId) {
         ArrayList<Object> courses = courseService.getCourseInfoOfStudent(stuId);
-        boolean success = true;
-        int code = 0;
-        String msg = null;
-        if (courses == null) {
-            success = false;
-            code = -1;
-            msg = "获取课程数据失败！";
-        }
-        return new Json(success, code, courses, 0L, msg);
+        boolean success = courses !=null;
+        return new Json(success, success?0:-1, courses, 0L, success?null:"获取课程数据失败!");
     }
 
     //map(courseId、courseName)
@@ -78,5 +64,10 @@ public class CourseController {
         return new Json(true);
     }
 
+    @DeleteMapping("/deleteCourseOfStudent/{stuId}/{courseId}")
+    public Json deleteCourseOfStudent(@PathVariable Long stuId, @PathVariable Long courseId) {
+        courseService.deleteCourseOfStudent(stuId, courseId);
+        return new Json(true);
+    };
 
 }

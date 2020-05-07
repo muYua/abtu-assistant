@@ -22,4 +22,6 @@ public interface CourseService {
     HashMap<String, Object> addCourseOfStudent(Long courseId, Long classId, Long stuId);
 
     ArrayList<Object> getCourseInfoOfStudent(Long stuId);
+
+    void deleteCourseOfStudent(Long stuId, Long courseId);
 }

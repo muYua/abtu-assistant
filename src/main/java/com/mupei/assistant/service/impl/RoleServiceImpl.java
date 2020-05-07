@@ -4,6 +4,7 @@ import com.mupei.assistant.dao.RoleDao;
 import com.mupei.assistant.dao.StudentDao;
 import com.mupei.assistant.dao.TeacherDao;
 import com.mupei.assistant.model.Role;
+import com.mupei.assistant.model.RoleInfo;
 import com.mupei.assistant.model.Student;
 import com.mupei.assistant.model.Teacher;
 import com.mupei.assistant.service.RoleService;
@@ -233,7 +234,13 @@ public class RoleServiceImpl implements RoleService {
 		}
 	}
 
-	@Override
+    @Override
+    public RoleInfo getRoleInfo(Long roleId) {
+		System.out.println("====================="+roleDao.findRoleInfoById(roleId).toString()+"========================");
+		return roleDao.findRoleInfoById(roleId);
+    }
+
+    @Override
 	@Transactional
 	public Boolean resetPassword(String email, String password, String currentTime, String ipAddr) {
 		if(StringUtils.isEmpty(email))

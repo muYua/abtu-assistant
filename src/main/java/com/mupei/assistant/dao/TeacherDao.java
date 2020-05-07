@@ -1,5 +1,6 @@
 package com.mupei.assistant.dao;
 
+import com.mupei.assistant.model.TeacherInfo;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -35,4 +36,7 @@ public interface TeacherDao extends CrudRepository<Teacher, Long>{
             " VALUES (:#{#teacher.education}, :#{#teacher.school}, :#{#teacher.teacherNumber}, :#{#teacher.title}, :roleId)"
             , nativeQuery = true)
     Integer save(Teacher teacher, Long roleId);
+
+    @Query(value = "FROM Role r WHERE r.id = ?1")
+    TeacherInfo findTeacherInfoById(Long roleId);
 }

@@ -58,5 +58,9 @@ public class Json {
 		this.count = count;
 		this.msg = msg;
 	}
-	
+
+	public Json(boolean success, Object obj) {
+		this.success = success;
+		this.obj = obj;
+	}
 }

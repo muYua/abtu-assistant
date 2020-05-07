@@ -1,6 +1,7 @@
 package com.mupei.assistant.service;
 
 import com.mupei.assistant.model.Role;
+import com.mupei.assistant.model.RoleInfo;
 
 import java.util.HashMap;
 
@@ -17,4 +18,6 @@ public interface RoleService {
 	Boolean resetPassword(String email, String password, String currentTime, String ipAddr);
 
 	Boolean checkResetPasswordVerifyCode(String email, String verifyCode);
+
+    RoleInfo getRoleInfo(Long roleId);
 }

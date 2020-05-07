@@ -26,15 +26,8 @@ public class StuClassController {
                                 @RequestParam Integer pageSize) {
         ArrayList<Object> stuClass = stuClassService.getClassByPage(courseId, pageNo, pageSize);
         Long count = stuClassService.getClassCount(courseId);
-        boolean success = true;
-        int code = 0;
-        String msg = null;
-        if(stuClass == null){
-            success =false;
-            code = -1;
-            msg = "获取班级数据失败！";
-        }
-        return new Json(success, code, stuClass, count, msg);
+        boolean success = stuClass != null;
+        return new Json(success, success?0:-1, stuClass, count, success?null:"获取班级数据失败!");
     }
     
     //map(classId、className)

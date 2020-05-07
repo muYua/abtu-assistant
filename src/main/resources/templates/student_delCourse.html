@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <title>删除课程</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <style type="text/css">
+        .layui-form {
+            padding: 5px 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>课程列表</legend>
+    </fieldset>
+    <table class="layui-hide" id="delCourse" lay-filter="delCourse"></table>
+    <script type="text/html" id="delCourseRowBar">
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    </script>
+</div>
+    <script type="text/javascript" data-main="js/student_delCourse" src="js/lib/require.js" charset="utf-8"></script>
+</body>
+</html>

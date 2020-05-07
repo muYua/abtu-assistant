@@ -41,6 +41,6 @@ public class Teacher extends Role {
 
   @ToString.Exclude
   @JsonIgnore
-  @OneToMany(targetEntity = Course.class, mappedBy = "teacher")
+  @OneToMany(targetEntity = Course.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teacher")
   private Set<Course> courses = new HashSet<>();
 }

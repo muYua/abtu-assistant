@@ -687,10 +687,11 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                     {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {field: 'stuNumber', title: '学号', align: 'center'}
-                    , {field: 'name', title: '学生姓名', align: 'center'}
-                    , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
-                    , {fixed: 'right', title: '操作', toolbar: '#homeworkFilesRowBar', align: 'center'} //行工具栏
+                    , {field: 'stuNumber', title: '学号', align: 'center'
+                        , templet: function (d) {return d.role['stuNumber'];}}
+                    , {field: 'roleName', title: '学生姓名', align: 'center'}
+                    , {field: 'createTime', title: '创建时间', width:160, sort: true, align: 'center'} //单元格内容水平居中
+                    , {fixed: 'right', title: '操作', width: 150, toolbar: '#homeworkFilesRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: true
                 , request: {
@@ -899,7 +900,8 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     {field: 'roleId', title: '学生ID'}
-                    , {field: 'stuNumber', title: '学号'}
+                    , {field: 'stuNumber', title: '学号'
+                        , templet: function (d) {return d.stuNumber;}}
                     , {field: 'name', title: '学生姓名'}
                     , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏
                 ]]

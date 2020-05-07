@@ -25,4 +25,6 @@ public interface UploadFileService {
     UploadFile findById(Long fileId);
 
     UploadFile save(UploadFile file);
+
+    void delFile(Long fileId);
 }
