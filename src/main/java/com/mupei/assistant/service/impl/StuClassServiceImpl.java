@@ -3,8 +3,6 @@ package com.mupei.assistant.service.impl;
 import com.mupei.assistant.dao.*;
 import com.mupei.assistant.model.Course;
 import com.mupei.assistant.model.StuClass;
-import com.mupei.assistant.model.StuClass_Message;
-import com.mupei.assistant.model.StuClass_UploadFile;
 import com.mupei.assistant.service.StuClassService;
 import com.mupei.assistant.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -118,6 +116,13 @@ public class StuClassServiceImpl implements StuClassService {
     @Override
     public Long getClassIdByCourseIdAndStuId(Long courseId, Long stuId) {
         return stuClassDao.findByCourseIdAndStuId(courseId, stuId).getId();
+    }
+
+    @Override
+    public void updateClass(Long classId, String className, Long courseId) {
+        StuClass stuClass = new StuClass(classId, className, courseDao.findById(courseId).orElse(null));
+        System.out.println(stuClass+"==========================");
+        stuClassDao.update(stuClass);
     }
 
 }

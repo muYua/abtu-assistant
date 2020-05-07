@@ -37,6 +37,12 @@ public class StuClassController {
         return new Json(true, map);
     }
 
+    @PutMapping("/updateClass/{classId}")
+    public Json updateClass(@PathVariable Long classId, @RequestParam String className, @RequestParam Long courseId) {
+        stuClassService.updateClass(classId, className, courseId);
+        return new Json(true);
+    }
+
     @DeleteMapping("/deleteClass")
     public Json deleteClass(@RequestParam Long classId){
         stuClassService.deleteClass(classId);

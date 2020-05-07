@@ -26,7 +26,7 @@ public class StuClass_Message {
     @JoinColumn(name = "stuclass_id", referencedColumnName = "id", nullable = false)
     private StuClass stuClass;
 
-    @ManyToOne(targetEntity = Message.class, cascade = CascadeType.ALL)//班级消息级联删除
+    @ManyToOne(targetEntity = Message.class, cascade = CascadeType.ALL)//班级消息级联删除，删除调试失败
     @JoinColumn(name = "message_id", referencedColumnName = "id", nullable = false)
     private Message message;
 

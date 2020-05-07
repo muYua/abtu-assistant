@@ -18,4 +18,6 @@ public interface StuClassService {
     void deleteClass(Long classId);
 
     Long getClassIdByCourseIdAndStuId(Long courseId, Long stuId);
+
+    void updateClass(Long classId, String className, Long courseId);
 }

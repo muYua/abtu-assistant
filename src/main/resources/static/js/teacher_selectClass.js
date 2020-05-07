@@ -30,7 +30,8 @@ require(['layui', 'utils'], function (layui, utils) {
             , cols: [[
                 {field: 'classId', title: '班级ID'}
                 , {field: 'className', title: '班级名称'}
-                , {field: 'teacherName', title: '任课教师'}
+                , {field: 'teacherName', title: '任课教师'
+                    , templet: function (d) {return d['course']['teacher']['name'];}}
                 , {fixed: 'right', title: '操作', toolbar: '#selectClassRowBar', align: 'center', width: 165} //行工具栏
             ]]
             , page: true
@@ -57,6 +58,8 @@ require(['layui', 'utils'], function (layui, utils) {
                         if (json.success) {
                             layer.msg("删除成功！", {time: 1000}, function () {
                                 // window.parent.location.reload();//成功后刷新父界面
+                                sessionStorage.removeItem("selectedClass");
+                                sessionStorage.removeItem("selectedClassName");
                                 window.location.reload();
                             });
                         } else {
@@ -75,12 +78,19 @@ require(['layui', 'utils'], function (layui, utils) {
                 });//end ajax
             }
             //---------END del-------------
-            if(obj.event === 'detail'){ //查看
-
-            }
-            //---------END detail-------------
             if(obj.event === 'edit'){ //编辑
-
+                layer.open({
+                    type: 2, //iframe层
+                    area: ['420px', '100px'], //宽高
+                    fixed: true, //固定
+                    maxmin: false, //最大小化
+                    closeBtn: 1, //右上关闭
+                    shadeClose: false, //点击遮罩关闭
+                    resize: false, //是否允许拉伸
+                    move: false,  //禁止拖拽
+                    title: '编辑班级',
+                    content: [utils.getDomainName() + '/teacher_editClass.html?classId=' + data['classId'], 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
             }
             //---------END edit-------------
         });//end table.on

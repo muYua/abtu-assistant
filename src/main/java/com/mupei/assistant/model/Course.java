@@ -3,12 +3,8 @@ package com.mupei.assistant.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +16,7 @@ import java.util.Set;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,4 +50,11 @@ public class Course {
         this.courseName = courseName;
         this.teacher = teacher;
     }
+
+    public Course(Long id, String courseName, Teacher teacher) {
+        this.id = id;
+        this.courseName = courseName;
+        this.teacher = teacher;
+    }
+
 }

@@ -46,8 +46,8 @@ require(['layui', 'utils'], function (layui, utils) {
             }
 
             $.ajax({
-                url: utils.getDomainName() + '/stuClass/insertClass',
-                type: 'post',
+                url: utils.getDomainName() + '/stuClass/updateClass/' + utils.getUrlParam('classId'),
+                type: 'put',
                 dataType: 'json',
                 timeout: '10000',
                 data: {
@@ -57,16 +57,14 @@ require(['layui', 'utils'], function (layui, utils) {
                 success: function (data) {
                     let message = data.msg;
                     if (data.success) {
-                        let map = data.map;
-                        layer.msg('添加成功！', {anim: 0, time: 1000}, function () {
-                            sessionStorage.setItem("selectedClass", map.classId);
-                            sessionStorage.setItem("selectedClassName", map.className);
+                        layer.msg('编辑成功！', {anim: 0, time: 1000}, function () {
+                            sessionStorage.setItem("selectedClassName", CLASS_NAME_VALUE);
                             //弹窗结束后
                             window.parent.location.reload();//修改成功后刷新父界面
                         });
                     } else {
                         if (typeof message === undefined || utils.isEmpty(message))
-                            layer.msg("添加失败！", {time: 2000, anim: 0});
+                            layer.msg("编辑失败！", {time: 2000, anim: 0});
                         else
                             layer.msg(message, {time: 2000, anim: 0});
                     }
@@ -75,7 +73,7 @@ require(['layui', 'utils'], function (layui, utils) {
                     console.log(xhr);
                     console.log(type);
                     console.log(errorThrown);
-                    layer.msg("服务器出错，请确认是否选择课程！", {anim: 0});
+                    layer.msg("服务器出错，编辑失败！", {time: 2000, anim: 0});
                 }
             });//end ajax
         });

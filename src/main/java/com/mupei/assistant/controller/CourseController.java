@@ -50,6 +50,12 @@ public class CourseController {
         return new Json(true, map);
     }
 
+    @PutMapping("/updateCourse/{courseId}")
+    public Json updateCourse(@PathVariable Long courseId, @RequestParam Long teacherId, @RequestParam String courseName) {
+        courseService.updateCourse(courseId, teacherId, courseName);
+        return new Json(true);
+    }
+
     //map(courseName)
     @PostMapping("/addCourseOfStudent")
     public Json addCourseOfStudent(@RequestParam Long courseId, @RequestParam Long classId, @RequestParam Long stuId) {

@@ -15,4 +15,8 @@ public interface StuClass_MessageDao extends CrudRepository<StuClass_Message, Lo
 
     @Query("FROM StuClass_Message sm WHERE sm.stuClass.id = ?1")
     ArrayList<StuClass_Message> findByClassId(Long classId);
+
+    @Modifying
+    @Query("DELETE FROM StuClass_Message sm WHERE sm.stuClass.id IN (SELECT c.id FROM StuClass c WHERE c.course.id = ?1)")
+    void deleteByCourseId(Long courseId);
 }

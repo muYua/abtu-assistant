@@ -24,58 +24,50 @@ require(['layui', 'utils'], function (layui, utils) {
         }
 
         /* 监听表单提交 */
-        $("input[name='submitInsertClass']").on("click", function () {
-            let CLASS_NAME = $("input[name='className']")
-                , CLASS_NAME_VALUE = CLASS_NAME.val();
+        $("input[name='submitInsertCourse']").on("click", function () {
+            let  COURSE_NAME = $("input[name='courseName']")
+                , COURSE_NAME_VALUE = COURSE_NAME.val();
 
-            if(utils.isEmpty(CLASS_NAME_VALUE)){
-                layerAnim6('请输入班级名称！');
-                CLASS_NAME.focus();
+            if(utils.isEmpty(COURSE_NAME_VALUE)){
+                layerAnim6('请输入课程名称！');
+                COURSE_NAME.focus();
                 return false;
             }
 
-            let teacherId = sessionStorage.getItem("roleId")
-                , courseId = sessionStorage.getItem("selectedCourse");
+            let teacherId = sessionStorage.getItem("roleId");
             if(utils.isEmpty(teacherId)){
-                layerAnim6('教师信息为空，新建班级出现错误！');
-                return false;
-            }
-            if(utils.isEmpty(courseId)){
-                layerAnim6('课程信息为空，新建班级出现错误！');
+                layerAnim6('教师信息为空，新建课程出现错误！');
                 return false;
             }
 
             $.ajax({
-                url: utils.getDomainName() + '/stuClass/insertClass',
-                type: 'post',
+                url: utils.getDomainName() + '/course/updateCourse/' + utils.getUrlParam('courseId'),
+                type: 'put',
                 dataType: 'json',
                 timeout: '10000',
                 data: {
-                    className: CLASS_NAME_VALUE,
-                    courseId: courseId,
+                    courseName: COURSE_NAME_VALUE,
+                    teacherId: teacherId
                 },
                 success: function (data) {
-                    let message = data.msg;
                     if (data.success) {
-                        let map = data.map;
-                        layer.msg('添加成功！', {anim: 0, time: 1000}, function () {
-                            sessionStorage.setItem("selectedClass", map.classId);
-                            sessionStorage.setItem("selectedClassName", map.className);
+                        layer.msg('编辑成功！', {anim: 0, time: 1000}, function () {
+                            sessionStorage.setItem("selectedCourseName", COURSE_NAME_VALUE);
                             //弹窗结束后
                             window.parent.location.reload();//修改成功后刷新父界面
                         });
                     } else {
-                        if (typeof message === undefined || utils.isEmpty(message))
-                            layer.msg("添加失败！", {time: 2000, anim: 0});
+                        if (typeof data.msg === undefined || utils.isEmpty(data.msg))
+                            layer.msg("编辑失败！", {time: 2000, anim: 0});
                         else
-                            layer.msg(message, {time: 2000, anim: 0});
+                            layer.msg(data.msg, {time: 2000, anim: 0});
                     }
                 },
                 error: function (xhr, type, errorThrown) {
                     console.log(xhr);
                     console.log(type);
                     console.log(errorThrown);
-                    layer.msg("服务器出错，请确认是否选择课程！", {anim: 0});
+                    layer.msg("服务器出错，编辑失败！", {time: 2000, anim: 0});
                 }
             });//end ajax
         });

@@ -75,12 +75,19 @@ require(['layui', 'utils'], function (layui, utils) {
                 });//end ajax
             }
             //---------END del-------------
-            if(obj.event === 'detail'){ //查看
-
-            }
-            //---------END detail-------------
             if(obj.event === 'edit'){ //编辑
-
+                layer.open({
+                    type: 2, //iframe层
+                    area: ['420px', '100px'], //宽高
+                    fixed: true, //固定
+                    maxmin: false, //最大小化
+                    closeBtn: 1, //右上关闭
+                    shadeClose: false, //点击遮罩关闭
+                    resize: false, //是否允许拉伸
+                    move: false,  //禁止拖拽
+                    title: '编辑课程',
+                    content: [utils.getDomainName() + '/teacher_editCourse.html?courseId=' + data['courseId'], 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
             }
             //---------END edit-------------
         });//end table.on

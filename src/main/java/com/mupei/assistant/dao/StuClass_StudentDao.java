@@ -25,4 +25,9 @@ public interface StuClass_StudentDao extends CrudRepository<StuClass_Student, Lo
     @Modifying
     @Query("DELETE FROM StuClass_Student ss WHERE ss.student.id = ?1")
     void deleteByStuId(Long stuId);
+
+    @Modifying
+    @Query("DELETE FROM StuClass_Student ss WHERE ss.stuClass.id IN (SELECT c.id FROM StuClass c WHERE c.course.id = ?1)")
+    void deleteByCourseId(Long courseId);
+
 }

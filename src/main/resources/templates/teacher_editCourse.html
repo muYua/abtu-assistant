@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑课程</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <style type="text/css">
+        .layui-form {
+            padding: 10px 10px 0 0;
+        }
+
+        input[name='courseName']{
+            width: 200px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form">
+    <label class="layui-form-label">课程名称</label>
+    <input type="text" class="layui-input layui-input-inline" name="courseName" autocomplete="off" placeholder="请输入课程名称">
+    <input type="button" class="layui-btn layui-inline"  name="submitInsertCourse" value="提交">
+</div>
+    <script type="text/javascript" data-main="js/teacher_editCourse" src="js/lib/require.js" charset="utf-8"></script>
+</body>
+</html>

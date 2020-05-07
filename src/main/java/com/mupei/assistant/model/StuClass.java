@@ -3,12 +3,8 @@ package com.mupei.assistant.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "stuclass")
@@ -17,6 +13,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class StuClass {//非通俗意义上的班级，便于教师管理学生群体，由教师建立班级
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

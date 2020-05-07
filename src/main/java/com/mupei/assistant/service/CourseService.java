@@ -24,4 +24,6 @@ public interface CourseService {
     ArrayList<Object> getCourseInfoOfStudent(Long stuId);
 
     void deleteCourseOfStudent(Long stuId, Long courseId);
+
+    void updateCourse(Long courseId, Long teacherId, String courseName);
 }

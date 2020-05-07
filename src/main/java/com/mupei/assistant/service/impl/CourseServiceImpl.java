@@ -37,6 +37,10 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private StuClass_StudentDao stuClass_studentDao;
     @Autowired
+    private StuClass_UploadFileDao stuClass_uploadFileDao;
+    @Autowired
+    private StuClass_MessageDao stuClass_messageDao;
+    @Autowired
     private JsonUtil jsonUtil;
 
     @Override
@@ -100,6 +104,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void deleteCourse(Long courseId) {
+        stuClass_messageDao.deleteByCourseId(courseId);
+        stuClass_studentDao.deleteByCourseId(courseId);
+        stuClass_uploadFileDao.deleteByCourseId(courseId);
         student_courseDao.deleteByCourseId(courseId);
         courseDao.deleteById(courseId);
         log.debug("【course/deleteCourse】删除课程，课程ID：{}", courseId);
@@ -174,5 +181,13 @@ public class CourseServiceImpl implements CourseService {
         stuClass_studentDao.deleteByStuId(stuId);
         student_courseDao.deleteByStuIdAndCourseId(stuId,courseId);
         log.debug("【course/deleteCourseOfStudent】删除选课，stuId:{}, 课程ID：{}", stuId, courseId);
+    }
+
+    @Override
+    @Transactional
+    public void updateCourse(Long courseId, Long teacherId, String courseName) {
+        Course course = new Course(courseId, courseName, teacherDao.findById(teacherId).orElse(null));
+        System.out.println(course+"==========================");
+        courseDao.update(course);
     }
 }

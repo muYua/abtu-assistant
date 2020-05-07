@@ -25,7 +25,7 @@ public class StuClass_UploadFile {
 	@JoinColumn(name = "stuclass_id", referencedColumnName = "id", nullable = false)
 	private StuClass stuClass;
 
-	@ManyToOne(targetEntity = UploadFile.class, cascade = CascadeType.ALL)//班级文件级联删除
+	@ManyToOne(targetEntity = UploadFile.class, cascade = CascadeType.ALL)//班级文件级联删除，删除调试失败
 	@JoinColumn(name = "uploadfile_id", referencedColumnName = "id", nullable = false)
 	private UploadFile uploadFile;
 
