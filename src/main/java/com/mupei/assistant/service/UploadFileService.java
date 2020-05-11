@@ -29,4 +29,8 @@ public interface UploadFileService {
     void delFile(Long fileId);
 
     String getImageFileUrl(Long roleId, Long fileId);
+
+    String getImageFileUrl(Long roleId);
+
+    void uploadImageFile(MultipartFile file, Long roleId);
 }

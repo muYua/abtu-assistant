@@ -45,7 +45,7 @@ public class Role {
   private String phone;
   
   //头像
-  @Column(columnDefinition = "varchar(255) not null default '/images/head-portraits/admin.jpg'")
+  @Column(columnDefinition = "varchar(255) not null default 'images/head-portraits/admin.jpg'")
   private String image;
   
   @Column(length = 11)

@@ -44,8 +44,9 @@ public class UploadFile {
 	private Integer updateCount;
 
 	//根据路径生成,路径标识
+	//还可以通过文件转二进制再生成MD5，作为文件内容的唯一标识
 	@JsonIgnore
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String md5;
 
 	// 文件类别，课堂文件、作业文件(教师下发、学生上传)、签到图片、头像

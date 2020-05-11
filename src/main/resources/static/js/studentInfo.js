@@ -174,17 +174,32 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
         });
 
         //图片上传
-        upload.render({
-            elem: '#imageUpload'
-            , url: 'https://httpbin.org/post/a' //改成您自己的上传接口
-            , accept: 'images' //默认值
-            , done: function (res) {
-                layer.msg('上传成功');
-                layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.files.file);
-                console.log(res)
+        let uploadInst = upload.render({
+            elem: '#uploadImage'
+            ,url: utils.getDomainName() + '/uploadFile/uploadImage/' + stuId //改成您自己的上传接口
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#uploadImageView').attr('src', result); //图片链接（base64）
+                });
             }
-            , error: function () {
-                utils.layerAnim6("上传失败！");
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg("上传图片成功！", {icon:6, time: 2000}, function () {
+                    window.parent.location.reload();
+                });
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                let demoText = $('#uploadImageText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
             }
         });
 

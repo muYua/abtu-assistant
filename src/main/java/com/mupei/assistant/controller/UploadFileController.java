@@ -78,9 +78,16 @@ public class UploadFileController {
         return new Json(true);
     }
 
-    @GetMapping("getImageUrl/{roleId}/{fileId}")
-    public Json getImageUrl(@PathVariable Long roleId, @PathVariable Long fileId){
-        String url = uploadFileService.getImageFileUrl(roleId, fileId);
+    @GetMapping("getImageUrl/{roleId}")
+    public Json getImageUrl(@PathVariable Long roleId){
+        String url = uploadFileService.getImageFileUrl(roleId);
         return new Json(url!= null, (Object)url);
+    }
+
+    @PostMapping("/uploadImage/{roleId}")
+    public Json uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Long roleId){
+        System.out.println("============"+roleId+"========");
+        uploadFileService.uploadImageFile(file, roleId);
+        return new Json(true);
     }
 }

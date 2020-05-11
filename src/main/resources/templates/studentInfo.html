@@ -112,12 +112,11 @@
     </fieldset>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <div class="layui-upload-drag" id="imageUpload">
-                <i class="layui-icon"></i>
-                <p>点击上传，或将文件拖拽到此处</p>
-                <div class="layui-hide" id="uploadDemoView">
-                    <hr>
-                    <img src="" alt="上传成功后渲染" style="max-width: 196px">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="uploadImage">上传图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="uploadImageView" style="width: 100px; height: 100px">
+                    <p id="uploadImageText" style="margin-top: 10px"></p>
                 </div>
             </div>
         </div>

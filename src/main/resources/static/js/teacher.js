@@ -26,6 +26,27 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
         let teacherId = sessionStorage.getItem("roleId");
         console.log("teacherId" + teacherId);
 
+        //加载头像
+        $(function () {
+            $.ajax({
+                url: utils.getDomainName() + "/uploadFile/getImageUrl/" + teacherId,
+                data: {                },
+                dataType: 'json',// 服务器返回json格式数据
+                type: 'get',
+                timeout: 10000,// 超时时间设置为10秒
+                success: function (json) {
+                    if (json.success) {
+                        $("#headImage").prop("src", json['obj']);
+                    }// end if
+                },
+                error: function (xhr, type, errorThrown) {
+                    console.log(xhr);
+                    console.log(type);
+                    console.log(errorThrown);
+                }
+            });//end ajax
+        });
+
         /* 刷新课程 */
         $(flushCourse());//$().ready(function(){}); <=> $(function(){});
         function flushCourse() {

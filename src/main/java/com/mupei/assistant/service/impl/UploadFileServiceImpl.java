@@ -69,21 +69,17 @@ UploadFileServiceImpl implements UploadFileService {
                 case "hs":
                     sortName = "HomeworkFiles"+ File.separator + "student";
                     break;
-                case "i":
-                    sortName = "ImageFiles";
-                    break;
+//                case "i":
+//                    sortName = "ImageFiles";
+//                    break;
                 case "s":
                     sortName = "SignInFiles";
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + sort);
             }
-            if("ImageFiles".equals(sortName)){
-                filePath = uploadFolder + roleId + File.separator + sortName;
-            } else {
-                filePath = uploadFolder + roleId + File.separator + sortName + File.separator +
-                        courseId + File.separator + classId; //存储上传文件的路径
-            }
+            filePath = uploadFolder + roleId + File.separator + sortName + File.separator +
+                    courseId + File.separator + classId; //存储上传文件的路径
             String currentTime = timeUtil.getCurrentTime();
             /*根据路径，文件名判重*/
             String checkMd5;
@@ -142,7 +138,6 @@ UploadFileServiceImpl implements UploadFileService {
             StuClass_UploadFile stuClass_uploadFile = new StuClass_UploadFile(stuClassDao.findById(classId).orElse(null), save, currentTime);
             stuClass_uploadFileDao.save(stuClass_uploadFile);
         }
-
     }
 
     @Override
@@ -357,6 +352,55 @@ UploadFileServiceImpl implements UploadFileService {
     @Override
     public String getImageFileUrl(Long roleId, Long fileId) {
         Optional<UploadFile> optional = uploadFileDao.findById(fileId);
-        return optional.map(uploadFile -> DomainName + "/static/" + fileId + "ImageFiles/" + uploadFile.getFileName()).orElse(null);
+        return optional.map(uploadFile -> DomainName + "/static/" + roleId + "ImageFiles/" + uploadFile.getFileName()).orElse(null);
+    }
+
+    @Override
+    public String getImageFileUrl(Long roleId) {
+        return roleDao.findById(roleId).map(Role::getImage).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void uploadImageFile(MultipartFile file, Long roleId) {
+        //处理文件
+        String fileName = file.getOriginalFilename();// 获取到上传文件的名字
+        String filePath = uploadFolder + roleId + File.separator + "ImageFiles";
+        String currentTime = timeUtil.getCurrentTime();
+        /*文件名未判重，直接进行覆盖*/
+        //创建文件夹
+        File dir = new File(filePath, Objects.requireNonNull(fileName));
+        if (!dir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            dir.mkdirs();
+        }
+        //存储到本地
+        String directory;
+        try {
+            file.transferTo(dir);
+            directory = dir.getCanonicalPath();//获取文档路径（完全路径）
+            log.debug("【uploadFile/uploadFiles】文件上传成功，路径directory：{}", directory);
+        } catch (IllegalStateException | IOException e) {
+            log.error("【uploadFile/uploadFiles】上传文件时，本地存储失败！");
+            e.printStackTrace();
+            return;
+        }
+        String md5;
+        try {
+            md5 = encryptUtil.encryptWithSHA(directory, "MD5");
+        } catch (NoSuchAlgorithmException e) {
+            log.error("【uploadFile/uploadFiles】上传文件时，获取MD5序列失败！");
+            e.printStackTrace();
+            return;
+        }
+        Long fileSize = file.getSize();//文件大小
+        //记录文件(实例化uploadFile)
+        UploadFile uploadFile = new UploadFile(fileName, fileSize, filePath, md5, "i", currentTime, roleDao.findById(roleId).orElse(null));
+        UploadFile save = uploadFileDao.save(uploadFile);
+        //关联角色的头像url
+        Role role = new Role();
+        role.setId(roleId);
+        role.setImage(DomainName + "/static/" + roleId + "/ImageFiles/" + save.getFileName());
+        roleDao.update(role);
     }
 }

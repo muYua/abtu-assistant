@@ -1,7 +1,5 @@
 package com.mupei.assistant.controller;
 
-import com.mupei.assistant.model.Student;
-import com.mupei.assistant.model.StudentInfo;
 import com.mupei.assistant.model.Teacher;
 import com.mupei.assistant.model.TeacherInfo;
 import com.mupei.assistant.vo.Json;
@@ -16,9 +14,8 @@ public class TeacherController {
 	@Autowired
 	private TeacherService teacherService;
 
-	@GetMapping("/getTeacherInfo/{id}")
-	public Json getTeacherInfo(@PathVariable Long id) {
-		System.out.println("============="+id+"===========");
+	@GetMapping("/getTeacherInfo")
+	public Json getTeacherInfo(@RequestParam Long id) {
 		TeacherInfo teacherInfo = teacherService.getTeacherInfo(id);
 		return new Json(teacherInfo != null, teacherInfo);
 	}

@@ -25,6 +25,27 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
         let stuId = sessionStorage.getItem("roleId");
         console.log("stuId" + stuId);
 
+        //加载头像
+        $(function () {
+            $.ajax({
+                url: utils.getDomainName() + "/uploadFile/getImageUrl/" + stuId,
+                data: {                },
+                dataType: 'json',// 服务器返回json格式数据
+                type: 'get',
+                timeout: 10000,// 超时时间设置为10秒
+                success: function (json) {
+                    if (json.success) {
+                        $("#headImage").prop("src", json['obj']);
+                    }// end if
+                },
+                error: function (xhr, type, errorThrown) {
+                    console.log(xhr);
+                    console.log(type);
+                    console.log(errorThrown);
+                }
+            });//end ajax
+        });
+
         $(flushCourse());
 
         /* 刷新课程 */
