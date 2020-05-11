@@ -9,4 +9,6 @@ public interface StudentService {
     ArrayList<Student> getStudentInfos(Long classId);
 
     StudentInfo getStudentInfo(Long stuId);
+
+    boolean updateStudentInfo(Student student);
 }

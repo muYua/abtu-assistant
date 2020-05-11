@@ -86,14 +86,14 @@ spring:
     timeout: 30000 #连接超时时间（毫秒）
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 500MB
+      max-file-size: 1000MB
+      max-request-size: 2000MB
 
 logging: #日志输出
   level:
     com.mupei.assistant: trace #输出日志最低级别
 #  path: /spring-assistant/log #指定目录，日志名默认spring.log；在当前磁盘的根目录下开始创建
-  file: D:/ABTU-assistant/assistant-log/assistant.log #不指定路径-当前项目下生成日志；指定完整路径-按路径生成日志
+  file: ${file.basePath}\assistant-log\assistant.log #不指定路径-当前项目下生成日志；指定完整路径-按路径生成日志
 #  pattern:
 #    console: #设置控制台的日志输出格式
 #    file: #设置文件中的日志输出格式

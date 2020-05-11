@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import sun.security.util.Password;
 
 @Slf4j
 @Service
@@ -236,11 +237,26 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleInfo getRoleInfo(Long roleId) {
-		System.out.println("====================="+roleDao.findRoleInfoById(roleId).toString()+"========================");
 		return roleDao.findRoleInfoById(roleId);
     }
 
-    @Override
+	@Override
+	@Transactional
+	public Boolean updatePassword(Long id, String oldPassword, String newPassword) {
+		String password;
+		try {
+			password = encryptUtil.encryptWithSHA(oldPassword, passwordAlgorithm, passwordSalt);
+			newPassword = encryptUtil.encryptWithSHA(newPassword, passwordAlgorithm, passwordSalt);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return false;
+		}
+		Integer integer = roleDao.updatePassword(id, password, newPassword);
+		System.out.println("=======+++"+integer+"++=========");
+		return integer > 0;
+	}
+
+	@Override
 	@Transactional
 	public Boolean resetPassword(String email, String password, String currentTime, String ipAddr) {
 		if(StringUtils.isEmpty(email))

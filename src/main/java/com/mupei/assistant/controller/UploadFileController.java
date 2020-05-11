@@ -77,4 +77,10 @@ public class UploadFileController {
         uploadFileService.delFile(fileId);
         return new Json(true);
     }
+
+    @GetMapping("getImageUrl/{roleId}/{fileId}")
+    public Json getImageUrl(@PathVariable Long roleId, @PathVariable Long fileId){
+        String url = uploadFileService.getImageFileUrl(roleId, fileId);
+        return new Json(url!= null, (Object)url);
+    }
 }

@@ -37,6 +37,6 @@ public interface TeacherDao extends CrudRepository<Teacher, Long>{
             , nativeQuery = true)
     Integer save(Teacher teacher, Long roleId);
 
-    @Query(value = "FROM Role r WHERE r.id = ?1")
+    @Query("SELECT t FROM Teacher t WHERE t.id = ?1")
     TeacherInfo findTeacherInfoById(Long roleId);
 }

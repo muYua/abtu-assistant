@@ -94,9 +94,9 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     }
                     if (sessionStorage.getItem("status") === null) {
                         //初始化
-                        console.log("初始化页面，并记录状态status=checkSignIn");
+                        console.log("初始化页面，并记录状态status=courseTimetable");
                         courseTimetable();
-                        sessionStorage.setItem("status", "checkSignIn");
+                        sessionStorage.setItem("status", "courseTimetable");
                     } else { //更新班级后刷新当前页面
                         console.log("刷新当前页面。");
                         flushCurrentStatus();

@@ -31,4 +31,9 @@ public class StudentServiceImpl implements StudentService {
     public StudentInfo getStudentInfo(Long stuId) {
         return studentDao.findStudentInfoById(stuId);
     }
+
+    @Override
+    public boolean updateStudentInfo(Student student) {
+        return studentDao.update(student) > 0;
+    }
 }

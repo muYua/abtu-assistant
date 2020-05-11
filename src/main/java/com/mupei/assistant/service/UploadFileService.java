@@ -27,4 +27,6 @@ public interface UploadFileService {
     UploadFile save(UploadFile file);
 
     void delFile(Long fileId);
+
+    String getImageFileUrl(Long roleId, Long fileId);
 }

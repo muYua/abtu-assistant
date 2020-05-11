@@ -23,13 +23,13 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties({"password", "email", "phone", "qq", "activated", "regTime", "loginTime", "loginIP"})//序列化时忽略的属性
 public class Teacher extends Role {
-  //所属学校
-  @Column(length = 55)
-  private String school;
-  
   //教工号
   @Column(length = 16)
   private String teacherNumber;
+
+  //所属学校
+  @Column(length = 55)
+  private String school;
   
   //学历
   @Column(length = 25)

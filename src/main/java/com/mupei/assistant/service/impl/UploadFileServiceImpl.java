@@ -48,8 +48,8 @@ UploadFileServiceImpl implements UploadFileService {
     private EncryptUtil encryptUtil;
     @Value("${file.uploadFolder}")
     private String uploadFolder;
-//    @Value("${domainName}")
-//    private String DomainName;
+    @Value("${domainName}")
+    private String DomainName;
 
     @Override
     @Transactional
@@ -58,7 +58,7 @@ UploadFileServiceImpl implements UploadFileService {
         for(MultipartFile file : files) {
             String fileName = file.getOriginalFilename();// 获取到上传文件的名字
 //            String filePath = request.getSession().getServletContext().getRealPath("upload") + File.separator + "file";//存储在"项目名/upload/file"
-            String sortName;
+            String sortName, filePath;
             switch (sort) {
                 case "l":
                     sortName = "TeachingFiles";
@@ -78,8 +78,12 @@ UploadFileServiceImpl implements UploadFileService {
                 default:
                     throw new IllegalStateException("Unexpected value: " + sort);
             }
-            String filePath = uploadFolder + roleId + File.separator + sortName + File.separator +
-                    courseId + File.separator + classId; //存储上传文件的路径
+            if("ImageFiles".equals(sortName)){
+                filePath = uploadFolder + roleId + File.separator + sortName;
+            } else {
+                filePath = uploadFolder + roleId + File.separator + sortName + File.separator +
+                        courseId + File.separator + classId; //存储上传文件的路径
+            }
             String currentTime = timeUtil.getCurrentTime();
             /*根据路径，文件名判重*/
             String checkMd5;
@@ -291,7 +295,7 @@ UploadFileServiceImpl implements UploadFileService {
                 byte[] buffer = new byte[1024];
                 FileInputStream fis = null;
                 BufferedInputStream bis = null;
-                OutputStream os = null;
+                OutputStream os;
                 try {
                     fis = new FileInputStream(file);
                     bis = new BufferedInputStream(fis);
@@ -347,5 +351,12 @@ UploadFileServiceImpl implements UploadFileService {
         stuClass_uploadFileDao.deleteByFileId(fileId);
         uploadFileDao.deleteById(fileId);
         //删除物理文件
+    }
+
+    //获取头像
+    @Override
+    public String getImageFileUrl(Long roleId, Long fileId) {
+        Optional<UploadFile> optional = uploadFileDao.findById(fileId);
+        return optional.map(uploadFile -> DomainName + "/static/" + fileId + "ImageFiles/" + uploadFile.getFileName()).orElse(null);
     }
 }

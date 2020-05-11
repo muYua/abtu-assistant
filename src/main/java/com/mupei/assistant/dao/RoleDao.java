@@ -13,6 +13,8 @@ public interface RoleDao extends CrudRepository<Role, Long> {
 
 	Optional<Role> findByEmail(String email);
 
+	@Modifying
+	@Query(value = "delete from Role r where r.email=?1", nativeQuery = true)
 	void deleteByEmail(String email);
 
 	@Modifying
@@ -36,6 +38,10 @@ public interface RoleDao extends CrudRepository<Role, Long> {
 
 	Role findByPhoneAndPassword(String roleNumber, String encrypted);
 
-	@Query(value = "SELECT r FROM Role r WHERE r.id = ?1")
+	@Query("SELECT r FROM Role r WHERE r.id = ?1")
 	RoleInfo findRoleInfoById(Long roleId);
+
+	@Modifying
+	@Query("UPDATE Role r set r.password = ?3 WHERE r.id = ?1 AND r.password = ?2")
+	Integer updatePassword(Long id, String password, String newPassword);
 }

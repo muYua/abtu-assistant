@@ -1055,5 +1055,22 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             window.location.href = "index.html";
         });
         /*--------------END 退出---------------*/
+
+        /* 教师基本信息 */
+        $("#teacherInfo").on("click", function () {
+            layer.open({
+                type: 2, //iframe层
+                area: ['700px', '510px'], //宽高
+                fixed: true, //固定
+                maxmin: false, //最大小化
+                closeBtn: 1, //右上关闭
+                shadeClose: false, //点击遮罩关闭
+                resize: false, //是否允许拉伸
+                move: false,  //禁止拖拽
+                title: '教师信息',
+                content: utils.getDomainName() + '/teacherInfo.html'//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+            });
+        });
+        /*--------------END 教师基本信息---------------*/
     });//end layui
 });//end require

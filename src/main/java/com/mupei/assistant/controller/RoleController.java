@@ -11,12 +11,7 @@ import com.mupei.assistant.vo.Json;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -129,6 +124,11 @@ public class RoleController {
         String ipAddr = ipAddressUtil.getIpAddr(request);
         Boolean resetPassword = roleService.resetPassword(email, password, currentTime, ipAddr);
         return new Json(resetPassword);
+    }
+
+    @PutMapping("/updatePassword/{id}")
+    public Json updatePassword(@PathVariable Long id, @RequestParam String oldPassword, @RequestParam String newPassword) {
+        return new Json(roleService.updatePassword(id, oldPassword, newPassword));
     }
 
     @GetMapping("/getRoleInfo")

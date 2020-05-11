@@ -20,4 +20,7 @@ public interface RoleService {
 	Boolean checkResetPasswordVerifyCode(String email, String verifyCode);
 
     RoleInfo getRoleInfo(Long roleId);
+
+	Boolean updatePassword(Long id, String oldPassword, String newPassword);
+
 }

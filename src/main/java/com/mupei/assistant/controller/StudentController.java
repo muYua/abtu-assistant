@@ -1,14 +1,12 @@
 package com.mupei.assistant.controller;
 
+import com.mupei.assistant.model.StuClass;
 import com.mupei.assistant.model.Student;
 import com.mupei.assistant.model.StudentInfo;
 import com.mupei.assistant.service.StudentService;
 import com.mupei.assistant.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -29,5 +27,10 @@ public class StudentController {
     public Json getStudentInfo(@RequestParam Long stuId) {
         StudentInfo studentInfo = studentService.getStudentInfo(stuId);
         return new Json(studentInfo != null, studentInfo);
+    }
+
+    @PutMapping("/updateStudentInfo")
+    public Json updateStudentInfo(Student student) {
+        return new Json(studentService.updateStudentInfo(student));
     }
 }
