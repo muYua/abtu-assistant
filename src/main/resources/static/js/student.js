@@ -730,14 +730,8 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                     </span>
                 </div>
                 <table class="layui-hide" id="usualPerformanceInfo" lay-filter="usualPerformanceInfo"></table>
-	            <script type="text/html" id="usualPerformanceInfoRowBar">
-	        		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-	        		<a class="layui-btn layui-btn-xs" lay-event="add">添加</a>
-	        		<a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
-	    		</script>
             `);
             element.render('breadcrumb');//重新进行对面包屑的渲染
-
 
             table.render({
                 elem: '#usualPerformanceInfo'
@@ -749,63 +743,30 @@ require(['layui', 'utils', 'encrypt'], function (layui, utils, encrypt) {
                 , method: 'get'
                 , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'roleId', title: '学生ID'}
-                    , {field: 'stuNumber', title: '学号'}
-                    , {field: 'stuName', title: '学生姓名'}
-                    , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏
-                    // , {field: 'roleName', title: '创建人', align: 'center'
-                    //     , templet: function (d) {return d.role['name'];}}
+                    {field: 'usualPerformanceId', title: 'id', hide: true}
+                    , {type: 'numbers', title: '序号'}
+                    , {field: 'stuId', title: '学生ID', hide: true
+                        , templet: function (d) {return d['student']['roleId']}}
+                    , {field: 'stuNumber', title: '学号'
+                        , templet: function (d) {return d['student']['stuNumber']}}
+                    , {field: 'name', title: '姓名'
+                        , templet: function (d) {return d['student']['name']}}
+                    , {field: 'score', title: '平时分'}
+                    , {field: 'date', title: '日期'}
                 ]]
                 , page: true
                 , request: {
                     pageName: 'pageNo' //页码的参数名称，默认：page
                     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
                 }
-                , done: function (res, curr, count) {
-                    let myData = [];
-                    let dataList = res.data;
-                    let number;
-                    myData[0] = {field: 'stuId', title: '学生ID'};
-                    myData[1] = {field: 'stuNumber', title: '学号'};
-                    myData[2] = {field: 'stuName', title: '学生姓名', align: 'center'};
-                    $.each(dataList, function (i, data) {
-                        console.log(i+'次');
-                        //data.date -> i
-                        //数据 -> data.score
-                        myData[i] = {field: '' + data.score, title: '第' + i + '次'};
-                        number = i;
-                    });
-                    myData[number+1] = {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'};//行工具栏
-                    table.init('userFilter', { //转换成静态表格
-                        cols: [myData]
-                        , data: res.data
-                        , limit: 10
-                    });
-                }
             });//end render(usualPerformance)
+
             //监听行点击事件
             table.on('row(usualPerformanceInfo)', function (obj) {
                 //标注选中行样式
                 obj.tr.addClass("layui-table-click").siblings().removeClass("layui-table-click");
             });
-            // 监听表格行工具栏时间
-            table.on('tool(usualPerformanceInfo)', function (obj) { //tool(lay-filter)
-                let data = obj.data;
-                if (obj.event === 'edit') {
-                    // layer.open({
-                    //     type: 2, //iframe层
-                    //     area: ['420px', '600px'], //宽高
-                    //     fixed: true, //固定
-                    //     maxmin: false, //最大小化
-                    //     closeBtn: 1, //右上关闭
-                    //     shadeClose: false, //点击遮罩关闭
-                    //     resize: false, //是否允许拉伸
-                    //     move: false,  //禁止拖拽
-                    //     title: '编辑平时成绩',
-                    //     content: utils.getDomainName() + '/teacher_usualPerformance.html' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                    // });
-                }
-            });// end table.on.tool(homeworkFiles)
+
         }
         $("#usualPerformance").on("click", function () {
             usualPerformance();

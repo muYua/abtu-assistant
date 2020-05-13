@@ -187,7 +187,6 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void updateCourse(Long courseId, Long teacherId, String courseName) {
         Course course = new Course(courseId, courseName, teacherDao.findById(teacherId).orElse(null));
-        System.out.println(course+"==========================");
         courseDao.update(course);
     }
 }

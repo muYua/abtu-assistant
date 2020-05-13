@@ -30,7 +30,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
         $(function () {
             $.ajax({
                 url: utils.getDomainName() + "/uploadFile/getImageUrl/" + teacherId,
-                data: {                },
+                data: {},
                 dataType: 'json',// 服务器返回json格式数据
                 type: 'get',
                 timeout: 10000,// 超时时间设置为10秒
@@ -126,6 +126,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             });//end ajax
 
         }
+
         /*--------------END 刷新课程---------------*/
 
         /* 刷新班级 */
@@ -229,6 +230,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }
             });//end ajax
         }
+
         /*--------------END 刷新班级---------------*/
 
         /* 刷新当前页面 */
@@ -256,6 +258,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                     break;
             }
         }
+
         /*--------------END 刷新当前页面---------------*/
 
         /* 设置课程班级信息，监听头部导航栏 */
@@ -299,6 +302,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
         /*------------END 监听头部导航栏-----------------*/
 
         /* 课程管理 */
+
         //新建课程
         function insertCourse() {
             layer.open({
@@ -337,9 +341,11 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }
             });
         }
+
         /*---------------END 课程管理---------------*/
 
         /* 班级管理 */
+
         //新建班级
         function insertClass() {
             layer.open({
@@ -379,6 +385,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }
             });
         }
+
         /*----------------END 班级管理----------------*/
 
         /* 考勤情况 */
@@ -611,7 +618,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 });
             //提交数据
             $("#sendHomeworkAction").on("click", function () {
-                if(utils.isEmpty(myEditor.getData())){
+                if (utils.isEmpty(myEditor.getData())) {
                     layer.msg("作业内容为空！", {time: 1000});
                     return false;
                 }
@@ -642,6 +649,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             });//end sendHomeworkAction.onclick
 
         }
+
         $("#sendHomework").on("click", function () {
             sendHomework();
             sessionStorage.setItem("status", "sendHomework");
@@ -708,10 +716,14 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                     {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {field: 'stuNumber', title: '学号', align: 'center'
-                        , templet: function (d) {return d.role['stuNumber'];}}
+                    , {
+                        field: 'stuNumber', title: '学号', align: 'center'
+                        , templet: function (d) {
+                            return d.role['stuNumber'];
+                        }
+                    }
                     , {field: 'roleName', title: '学生姓名', align: 'center'}
-                    , {field: 'createTime', title: '创建时间', width:160, sort: true, align: 'center'} //单元格内容水平居中
+                    , {field: 'createTime', title: '创建时间', width: 160, sort: true, align: 'center'} //单元格内容水平居中
                     , {fixed: 'right', title: '操作', width: 150, toolbar: '#homeworkFilesRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: true
@@ -737,6 +749,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }// end obj.event==='download'
             });// end table.on.tool(homeworkFiles)
         }
+
         $("#getHomework").on("click", function () {
             getHomework();
             sessionStorage.setItem("status", "getHomework");
@@ -861,6 +874,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 }
             });//end upload.render
         }
+
         $("#sendTeachingFiles").on("click", function () {
             sendTeachingFiles();
             sessionStorage.setItem("status", "sendTeachingFiles");
@@ -897,15 +911,13 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                     <span class="layui-breadcrumb">
                         <a><cite>教师主页</cite></a>
                         <a><cite>平时成绩</cite></a>
-                        <a><cite>${selectedCourse}</cite></a>
-                        <a><cite>${selectedClass}</cite></a>
+                        <a><cite>${selectedCourseName}</cite></a>
+                        <a><cite>${selectedClassName}</cite></a>
                     </span>
                 </div>
                 <table class="layui-hide" id="usualPerformanceInfo" lay-filter="usualPerformanceInfo"></table>
 	            <script type="text/html" id="usualPerformanceInfoRowBar">
-	        		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-	        		<a class="layui-btn layui-btn-xs" lay-event="add">添加</a>
-	        		<a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
+	        		<a class="layui-btn layui-btn-xs" lay-event="detail">查看详情</a>
 	    		</script>
             `);
             element.render('breadcrumb');//重新进行对面包屑的渲染
@@ -913,18 +925,21 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
 
             table.render({
                 elem: '#usualPerformanceInfo'
-                , url: utils.getDomainName() + '/student/getStudentInfos' //数据接口
+                , url: utils.getDomainName() + '/usualPerformance/getUsualPerformanceInfo' //数据接口
                 , where: {
+                    courseId: selectedCourse,
                     classId: selectedClass
                 }
                 , method: 'get'
                 , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    {field: 'roleId', title: '学生ID'}
-                    , {field: 'stuNumber', title: '学号'
-                        , templet: function (d) {return d.stuNumber;}}
-                    , {field: 'name', title: '学生姓名'}
-                    , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'} //行工具栏
+                    {field: 'stuId', title: '学生ID'}
+                    , {field: 'stuNumber', title: '学号'}
+                    , {field: 'name', title: '姓名'}
+                    , {field: 'count', title: '打分次数'
+                        , templet: function (d) {return d.count + "次"}}
+                    , {field: 'avg', title: '平均分'}
+                    , {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', width: 160, align: 'center'} //行工具栏
                 ]]
                 , page: true
                 , request: {
@@ -932,25 +947,6 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
                 }
                 , done: function (res, curr, count) {
-                    // let myData = [];
-                    //                     // let dataList = res.data;
-                    //                     // let number;
-                    //                     // myData[0] = {field: 'stuId', title: '学生ID'};
-                    //                     // myData[1] = {field: 'stuNumber', title: '学号'};
-                    //                     // myData[2] = {field: 'stuName', title: '学生姓名', align: 'center'};
-                    //                     // $.each(dataList, function (i, data) {
-                    //                     //     console.log(i+'次');
-                    //                     //     //data.date -> i
-                    //                     //     //数据 -> data.score
-                    //                     //     myData[i] = {field: '' + data.score, title: '第' + i + '次'};
-                    //                     //     number = i;
-                    //                     // });
-                    //                     // myData[number+1] = {fixed: 'right', title: '操作', toolbar: '#usualPerformanceInfoRowBar', align: 'center'};//行工具栏
-                    //                     // table.init('userFilter', { //转换成静态表格
-                    //                     //     cols: [myData]
-                    //                     //     , data: res.data
-                    //                     //     , limit: 10
-                    //                     // });
                 }
             });//end render(usualPerformance)
             //监听行点击事件
@@ -961,22 +957,23 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             // 监听表格行工具栏时间
             table.on('tool(usualPerformanceInfo)', function (obj) { //tool(lay-filter)
                 let data = obj.data;
-                if (obj.event === 'edit') {
+                if (obj.event === 'detail') {
                     layer.open({
                         type: 2, //iframe层
-                        area: ['420px', '600px'], //宽高
+                        area: ['650px', '500px'], //宽高
                         fixed: true, //固定
                         maxmin: false, //最大小化
                         closeBtn: 1, //右上关闭
                         shadeClose: false, //点击遮罩关闭
                         resize: false, //是否允许拉伸
-                        move: false,  //禁止拖拽
-                        title: '编辑平时成绩',
-                        content: utils.getDomainName() + '/teacher_usualPerformance.html' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        move: true,  //拖拽
+                        title: '平时成绩详细信息',
+                        content: utils.getDomainName() + '/teacher_selectUsualPerformance.html?stuId=' + data.stuId
                     });
                 }
             });// end table.on.tool(homeworkFiles)
         }
+
         $("#usualPerformance").on("click", function () {
             usualPerformance();
             sessionStorage.setItem("status", "usualPerformance");

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <title>平时成绩详细信息</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+</head>
+<body>
+<div id="contentBody">
+    <input type="hidden" name="id" class="layui-input">
+    <label class="layui-form-label">新增</label>
+    <div class="layui-inline">
+        <input type="text" class="layui-input" name="insertUsualPerformance" autocomplete="off" placeholder="插入新的平时成绩">
+    </div>
+    <table class="layui-hide" id="selectUsualPerformance" lay-filter="selectUsualPerformance"></table>
+    <script type="text/html" id="selectUsualPerformanceRowBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+</div>
+<script type="text/javascript" data-main="js/teacher_selectUsualPerformance" src="js/lib/require.js" charset="utf-8"></script>
+</body>
+</html>

@@ -252,7 +252,6 @@ public class RoleServiceImpl implements RoleService {
 			return false;
 		}
 		Integer integer = roleDao.updatePassword(id, password, newPassword);
-		System.out.println("=======+++"+integer+"++=========");
 		return integer > 0;
 	}
 
