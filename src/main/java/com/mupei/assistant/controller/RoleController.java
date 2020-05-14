@@ -2,7 +2,6 @@ package com.mupei.assistant.controller;
 
 import com.mupei.assistant.model.Role;
 import com.mupei.assistant.model.RoleInfo;
-import com.mupei.assistant.model.Student;
 import com.mupei.assistant.service.RoleService;
 import com.mupei.assistant.utils.IpAddressUtil;
 import com.mupei.assistant.utils.TimeUtil;
@@ -12,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 @RestController
 public class RoleController {
@@ -74,12 +73,13 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/activateRegVerifyCode")
-    public Json activateVerifyCode(@RequestParam String encryptedEmail, @RequestParam String encryptedVerifyCode,
-                                   HttpServletRequest request, @RequestParam(required = false) String stuNumber) {
+    public ModelAndView activateVerifyCode(@RequestParam String encryptedEmail, @RequestParam String encryptedVerifyCode,
+                                           HttpServletRequest request, @RequestParam(required = false) String stuNumber) {
         String currentTime = timeUtil.getCurrentTime();
         String ipAddr = ipAddressUtil.getIpAddr(request);
         Boolean activateReg = roleService.activateReg(encryptedEmail, encryptedVerifyCode, currentTime, ipAddr, stuNumber);
-        return new Json(activateReg);
+        String viewName = activateReg?"success/regSuccess":"error/regFail";
+        return new ModelAndView(viewName);
     }
 
     /**
