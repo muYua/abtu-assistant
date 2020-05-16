@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
+@CrossOrigin
 @RequestMapping("/uploadFile")
 @RestController //@Controller + @ResponseBody
 public class UploadFileController {

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 
+@CrossOrigin
 @RestController
 public class RoleController {
     @Autowired

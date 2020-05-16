@@ -445,10 +445,11 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                     {field: 'fileId', title: '文件ID'}
                     , {field: 'fileName', title: '文件名'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     , {field: 'fileSize', title: '文件大小', align: 'center'}
-                    , {field: 'stuNumber', title: '学号', align: 'center'}
-                    , {field: 'classNickname', title: '学生班级昵称', align: 'center'}
+                    , {field: 'stuNumber', title: '学号', align: 'center'
+                        , templet: function (d) {return d['role']['stuNumber'];}}
+                    , {field: 'fileUrl', title: '文件访问路径', align: 'center', hide: true}
+                    , {field: 'roleName', title: '学生姓名', align: 'center'}
                     , {field: 'createTime', title: '创建时间', sort: true, align: 'center'} //单元格内容水平居中
-                    // , {field: 'fileUrl', title: '文件路径', align: 'center', hide: true}
                     , {fixed: 'right', title: '操作', toolbar: '#signInRowBar', align: 'center'} //行工具栏
                 ]]
                 , page: true
@@ -462,7 +463,8 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             table.on('tool(signIn)', function (obj) { //tool(lay-filter)
                 let data = obj.data;
                 if (obj.event === 'look') {
-                    window.location.href = data['fileUrl'];
+                    // window.location.href = data['fileUrl'];
+                    window.open(data['fileUrl']);
                 }
             });//end table.on
 

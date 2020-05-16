@@ -1,6 +1,5 @@
 package com.mupei.assistant.controller;
 
-import com.mupei.assistant.model.StuClass;
 import com.mupei.assistant.model.Student;
 import com.mupei.assistant.model.StudentInfo;
 import com.mupei.assistant.service.StudentService;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@CrossOrigin
 @RequestMapping("/stuClass")
 @RestController //@Controller + @ResponseBody
 public class StuClassController {

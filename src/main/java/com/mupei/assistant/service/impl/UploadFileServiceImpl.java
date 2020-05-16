@@ -152,7 +152,7 @@ UploadFileServiceImpl implements UploadFileService {
             String stuNumber = studentDao.findById(file.getId()).map(Student::getStuNumber).orElse(null);
             String roleName = file.getRole().getName();
             //fileUrl
-//            String fileUrl = DomainName + "/static/" + file.getRole().getId() + "/SignInFiles/" + courseId + "/" + classId + "/" +file.getFileName();
+            String fileUrl = DomainName + "/static/" + file.getRole().getId() + "/SignInFiles/" + courseId + "/" + classId + "/" +file.getFileName();
             try { //存入数据(通过数据类型转换完成)
                 //file => json => map
                 @SuppressWarnings("unchecked")
@@ -160,7 +160,7 @@ UploadFileServiceImpl implements UploadFileService {
                 //map.put
                 map.put("stuNumber", stuNumber);
 				map.put("roleName", roleName);
-//				map.put("fileUrl", fileUrl);
+				map.put("fileUrl", fileUrl);
                 //map => json => object => list.add(object)
                 list.add(jsonUtil.parse(jsonUtil.stringify(map), Object.class));
             } catch (IOException e) {
