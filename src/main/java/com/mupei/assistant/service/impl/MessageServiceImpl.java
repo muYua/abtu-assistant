@@ -52,7 +52,7 @@ public class MessageServiceImpl implements MessageService {
                 messages.add(message);
             }
         });
-        log.debug("【message/getMessage】找到对应课程的消息{}，消息内容：{}，课程ID：{}，学生ID：{}", sort, messages, courseId, stuId);
+        log.debug("【message/getMessage】找到对应课程的消息{}，消息内容：{}，课程ID：{}，学生ID：{}，时间：{}", sort, messages, courseId, stuId, date);
         return  messages;
     }
 }
