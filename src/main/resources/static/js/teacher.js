@@ -443,7 +443,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     {field: 'fileId', title: '文件ID'}
-                    , {field: 'stuNumber', title: '学号', align: 'center'
+                    , {field: 'stuNumber', title: '学号', align: 'center', sort: true
                         , templet: function (d) {return d['role']['stuNumber'];}}
                     , {field: 'fileUrl', title: '文件访问路径', align: 'center', hide: true}
                     , {field: 'roleName', title: '学生姓名', align: 'center'}
