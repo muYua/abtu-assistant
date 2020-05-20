@@ -915,6 +915,7 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                         <a><cite>${selectedClassName}</cite></a>
                     </span>
                 </div>
+                <button type="button" id="insertUsualPerformance" class="layui-btn">添加平时成绩</button>
                 <table class="layui-hide" id="usualPerformanceInfo" lay-filter="usualPerformanceInfo"></table>
 	            <script type="text/html" id="usualPerformanceInfoRowBar">
 	        		<a class="layui-btn layui-btn-xs" lay-event="detail">查看详情</a>
@@ -922,6 +923,20 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
             `);
             element.render('breadcrumb');//重新进行对面包屑的渲染
 
+            $("#insertUsualPerformance").on("click", function () {
+                layer.open({
+                    type: 2, //iframe层
+                    area: ['650px', '500px'], //宽高
+                    fixed: true, //固定
+                    maxmin: false, //最大小化
+                    closeBtn: 1, //右上关闭
+                    shadeClose: false, //点击遮罩关闭
+                    resize: false, //是否允许拉伸
+                    move: true,  //拖拽
+                    title: '添加平时成绩',
+                    content: utils.getDomainName() + '/teacher_insertUsualPerformance.html'
+                });
+            });
 
             table.render({
                 elem: '#usualPerformanceInfo'
@@ -968,12 +983,14 @@ require(['layui', 'utils', 'ckeditor', 'ckeditorLanguage'], function (layui, uti
                         resize: false, //是否允许拉伸
                         move: true,  //拖拽
                         title: '平时成绩详细信息',
-                        content: utils.getDomainName() + '/teacher_selectUsualPerformance.html?stuId=' + data.stuId
+                        content: utils.getDomainName() + '/teacher_selectUsualPerformance.html?stuId=' + data.stuId,
+                        end: function () {//该iframe窗口销毁，取消或确认，不携带任何参数。layer.open关闭事件
+                            location.reload(); //layer.open关闭刷新
+                        }
                     });
                 }
             });// end table.on.tool(homeworkFiles)
         }
-
         $("#usualPerformance").on("click", function () {
             usualPerformance();
             sessionStorage.setItem("status", "usualPerformance");
