@@ -11,6 +11,8 @@
 	<groupId>com.mupei</groupId>
 	<artifactId>abtu-assistant</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<!-- 项目打包方式：jar、war -->
+	<!--<packaging>war</packaging>-->
 	<name>abtu-assistant</name>
 	<description>ABTU classroom assistant</description>
 
@@ -18,7 +20,7 @@
 		<java.version>1.8</java.version>
 		<druid.version>1.1.20</druid.version>
 		<jose4j.version>0.6.5</jose4j.version>
-		<pageoffice.version>4.6.0.3</pageoffice.version>
+		<pageoffice.version>5.1.0.2</pageoffice.version>
 	</properties>
 
 	<dependencies>
@@ -81,6 +83,8 @@
 			<groupId>com.zhuozhengsoft</groupId>
 			<artifactId>pageoffice</artifactId>
 			<version>${pageoffice.version}</version>
+			<scope>system</scope> <!-- 显式提供依赖的jar -->
+			<systemPath>${basedir}/lib/pageoffice.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
