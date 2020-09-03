@@ -1,10 +1,15 @@
 ## 一、环境依赖
-Eclipse\
-Tomcat 9.0\
-MySQL 5.7\
-Redis
-
+开发语言：Java1.8\
+开发工具IDE：Eclipse或Idea\
+应用服务器：Tomcat 9.0\
+关系型数据库：MySQL 5.7\
+非关系型数据库：Redis 3.x（windows版）
 ## 二、部署步骤
+0.部署好上面提到的环境依赖。\
+1.由于pageoffice不能在官方的Maven中央仓库中下载，需要自己去pageoffice官网中自行下载Jar包。
+这里Maven引入Jar包的方式，只要在pom.xml中将相应的Jar包本地路径修改为自己本地的正确的Jar路径即可。\
+2.在注册的步骤中需要使用Redis存储验证码，应该在该操作时完成Redis的环境部署。\
+3.关于QQ邮箱通过SMTP电子邮件传输协议的代理完成收发邮件的功能，需要自己校验在application.yml中spring.mail中的配置是否符合自己的要求。也就是说，需要自己配置自己的邮箱信息。
 
 ## 三、目录结构描述
 例子:
